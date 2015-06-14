@@ -185,7 +185,12 @@ DetectorConstruction::ConstructLaboratory()
     const G4double dLabHalfSize = 0.5*GetGeometryParameter("LabSize");
     
     //G4Material *Air = G4Material::GetMaterial("G4_AIR");
-    G4Material *Air = G4Material::GetMaterial("G4_AIR");
+    G4NistManager* pNistManager = G4NistManager::Instance();
+
+    G4Material *Air = pNistManager->FindOrBuildMaterial("G4_AIR");
+
+    
+    //G4Material *Air = G4Material::GetMaterial("G4_AIR");
     
     G4Box *pLabBox         = new G4Box("LabBox", dLabHalfSize, dLabHalfSize, dLabHalfSize);
     m_pLabLogicalVolume    = new G4LogicalVolume(pLabBox, Air, "LabVolume", 0, 0, 0);
