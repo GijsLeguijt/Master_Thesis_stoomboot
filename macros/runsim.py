@@ -35,7 +35,8 @@ def make_preinit_script():
     # make the preinit_script
     #
     print('make_preinit_script:: start generating script')
-    preinit_script = run_dir+'/preinit'+run+'.mac'
+    global preinit_script
+    preinit_script = run_dir+'/preinit_'+output_basename+'.mac'
     fout = open(preinit_script,'w')
     
     fout.write('# GEANT4 - G4simu pre_init macro (AUTOMATICALLY GENERATED) \n')
@@ -57,8 +58,9 @@ def make_run_script():
     # make the run_script
     #
     print('make_run_script:: start generating script')
-    preinit_script = run_dir+'/preinit'+run+'.mac'
-    fout = open(preinit_script,'w')
+    global run_script
+    run_script = run_dir+'/run_'+output_basename+'.mac'
+    fout = open(run_script,'w')
     
     fout.write('# GEANT4 - G4simu run macro (AUTOMATICALLY GENERATED) \n')
     fout.write('/control/verbose  0 \n')
@@ -95,3 +97,7 @@ def make_run_script():
 make_preinit_script()
 
 make_run_script()
+
+
+print('PREINIT = '+preinit_script)
+print('RUN     = '+run_script)
