@@ -87,12 +87,12 @@ main(int argc, char **argv)
   G4RunManager *pRunManager = new G4RunManager;
 	
   // Detector Construction
-  G4String detectorRoot = "DET_"+hDataFilename;
+  G4String detectorRoot = hDataFilename+".DET";
   DetectorConstruction *detCon = new DetectorConstruction(detectorRoot); 
   pRunManager->SetUserInitialization(detCon);
   
   // Physics List
-  G4String physicsRoot = "PHYS_"+hDataFilename;
+  G4String physicsRoot = hDataFilename+".PHYS";
   PhysicsList *physList = new PhysicsList(physicsRoot); 
   pRunManager->SetUserInitialization(physList);
 	
@@ -101,7 +101,7 @@ main(int argc, char **argv)
   pVisManager->Initialize();
   
   // create the primary generator action
-  G4String generatorRoot = "GEN_"+hDataFilename;
+  G4String generatorRoot = hDataFilename+".GEN";
   PrimaryGeneratorAction *pPrimaryGeneratorAction = new PrimaryGeneratorAction(generatorRoot);
   
   // create an analysis manager object
