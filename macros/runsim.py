@@ -94,8 +94,8 @@ def make_shell_script():
     # make the shell script for running on stoomboot
     #
 
-    print('make_run_script:: macro ='+run_script)
-    fout = open(run_script,'w')
+    print('make_run_script:: macro ='+shell_script)
+    fout = open(shell_script,'w')
     fout.write('#!/bin/sh\n')
 
     fout.write('# setup root\n')
@@ -114,7 +114,7 @@ def make_shell_script():
 
     fout.close()
 
-    cmd = 'chmod +x '+run_script
+    cmd = 'chmod +x '+shell_script
     os.system(cmd)
 #--------------------------------------------------------------------------------------------
 # MAIN CODE
