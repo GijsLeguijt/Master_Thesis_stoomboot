@@ -8,7 +8,7 @@
 #
 # A.P. Colijn - colijn@nikhef.nl
 #
-
+import sys,os
 #--------------------------------------------------------------------------------------------
 
 # where is the modusim code
@@ -65,7 +65,7 @@ def make_G4run_script():
     fout.write('/event/verbose    0\n')
     fout.write('/tracking/verbose 0\n')
     
-    fout.write('/run/random/setRandomSeed '+ran_seed+'\n')
+    fout.write('/run/random/setRandomSeed '+str(ran_seed)+'\n')
     
     fout.write('/gps/pos/type    Volume\n')
     fout.write('/gps/pos/shape   Sphere\n')
@@ -113,6 +113,9 @@ def make_shell_script():
     fout.write(simulation_basedir+'/../modusim-build/G4simu -p '+preinit_script+' -f '+run_script+' -n '+str(numberOfEvents))
 
     fout.close()
+
+    cmd = 'chmod +x '+run_script
+    os.system(cmd)
 #--------------------------------------------------------------------------------------------
 # MAIN CODE
 
