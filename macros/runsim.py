@@ -110,7 +110,7 @@ def make_shell_script():
     fout.write('source geant4.csh\n')
     fout.write('cd ${BASEDIR} \n')
 
-    fout.write(simulation_basedir+'/../modusim-build/G4simu -p '+preinit_script+' -f '+run_script+' -n '+str(numberOfEvents))
+    fout.write(simulation_basedir+'/../modusim-build/G4simu -p '+preinit_script+' -f '+run_script+' -n '+str(numberOfEvents)+' -o '+output_root)
 
     fout.close()
 
