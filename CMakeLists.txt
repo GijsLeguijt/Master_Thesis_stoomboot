@@ -4,9 +4,6 @@
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /cvmfs/geant4.cern.ch/geant4/10.1.p02/share/cmake/Modules/)
-message(STATUS " module path " ${CMAKE_MODULE_PATH})
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /home/geant4/geant4.10.00.p02/cmake/Modules)
 project(G4simu)
 
 #----------------------------------------------------------------------------
@@ -21,9 +18,14 @@ else()
   find_package(Geant4 REQUIRED)
 endif()
 
+message(STATUS " GEANT4 system dir " ${Geant4_DIR}/Modules)
 message(STATUS " GEANT4 include dirs " ${Geant4_INCLUDE_DIRS})
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${Geant4_DIR}/Modules)
+message(STATUS " module path " ${CMAKE_MODULE_PATH})
+
 #----------------------------------------------------------------------------
+# find the ROOT package
 find_package(ROOT REQUIRED)
 message(STATUS " ROOT include dirs " ${ROOT_INCLUDE_DIR})
 message(STATUS " ROOT libraries " ${ROOT_LIBRARIES})
