@@ -1,9 +1,11 @@
 # $Id: CMakeLists.txt 68058 2013-03-13 14:47:43Z gcosmo $
+#
 
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /home/geant4/root/root/etc/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /cvmfs/geant4.cern.ch/geant4/10.1.p02/share/cmake/Modules/)
+message(STATUS " module path " ${CMAKE_MODULE_PATH})
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /home/geant4/geant4.10.00.p02/cmake/Modules)
 project(G4simu)
 
@@ -19,12 +21,12 @@ else()
   find_package(Geant4 REQUIRED)
 endif()
 
+message(STATUS " GEANT4 include dirs " ${Geant4_INCLUDE_DIRS})
+
 #----------------------------------------------------------------------------
 find_package(ROOT REQUIRED)
-message("INCLUDE DIRS")
-message(${ROOT_INCLUDE_DIR})
-message("LIBRARIES")
-message(${ROOT_LIBRARIES})
+message(STATUS " ROOT include dirs " ${ROOT_INCLUDE_DIR})
+message(STATUS " ROOT libraries " ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
@@ -38,6 +40,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include ${Geant4_INCLUDE_DIRS} ${ROOT_
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
 #
+message(STATUS "source files " ${PROJECT_SOURCE_DIR})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
