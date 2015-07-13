@@ -12,6 +12,7 @@
 #
 
 import sys,os
+import getopt
 #--------------------------------------------------------------------------------------------
 
 # IMPORTANT: set the variables below according to your own system
@@ -95,22 +96,26 @@ def make_shell_script():
     
     print('make_run_script:: macro ='+shell_script)
     fout = open(shell_script,'w')
-    fout.write('#!/bin/csh\n')
+    fout.write('#!/bin/csh \n')
     
     fout.write('# AUTOMATICALLY GENERATED FILE \n')
-    fout.write('# setup root\n')
-    fout.write('source /project/atlas/nikhef/cvmfs/setup.csh\n')
-    fout.write('setupATLAS\n')
-    fout.write('localSetupROOT '+ROOT_version+'\n')
-    
-    fout.write('# setup GEANT4\n')
-    fout.write('setenv BASEDIR `pwd`\n')
-    fout.write('source /cvmfs/geant4.cern.ch/etc/login.csh\n')
-    fout.write('cd /cvmfs/geant4.cern.ch/geant4/'+GEANT4_version+'/x86_64-slc6-gcc48-opt/bin/\n')
-    fout.write('source geant4.csh\n')
-    fout.write('cd ${BASEDIR} \n')
-    
+    fout.write(' \n')
+    fout.write('source /project/atlas/nikhef/cvmfs/setup.csh \n')
+    fout.write(' \n')
+    fout.write('setupATLAS \n')
+    fout.write(' \n')
+    fout.write('localSetupROOT '+ROOT_version+' \n')
+    fout.write(' \n')
+    fout.write('source /cvmfs/geant4.cern.ch/etc/login.csh \n')
+    fout.write(' \n')
+    fout.write('cd /cvmfs/geant4.cern.ch/geant4/'+GEANT4_version+'/x86_64-slc6-gcc48-opt/bin/ \n')
+    fout.write(' \n')
+    fout.write('source geant4.csh \n')
+    fout.write(' \n')
+    fout.write('cd '+run_dir+' \n')
+    fout.write(' \n')
     fout.write(simulation_basedir+'/../modusim-build/G4simu -p '+preinit_script+' -f '+run_script+' -n '+str(numberOfEvents)+' -o '+output_root)
+    fout.write(' \n')
     
     fout.close()
     
