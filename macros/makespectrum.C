@@ -42,7 +42,7 @@ void makespectrum(string fname){
     TH1F *_spectrum_no_smear = new TH1F("spectrum_no_smear","spectrum_no_smear",nbin,emin,emax);
     evt->Draw("ed>>spectrum_no_smear");
     
-    TH1F *_spectrum_bg   = new TH1F("spectrum_bg","spectrum_bg",nbin,emin,emax);
+    TH1F *_spectrum_bg   = new TH1F("h2","h2",nbin,emin,emax);
     TH1F *_spectrum_full = new TH1F("spectrum_full","spectrum_full",nbin,emin,emax);
     
     
