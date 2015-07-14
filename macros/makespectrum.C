@@ -12,8 +12,8 @@ const int    nbin      = 600;
 const int    iwindow   = 60;
 const double emin      = 0;
 const double emax      = 3000;
-const double E_cut_off = 1; //keV
-const double delta_cut = 10;
+const double E_cut_off = 10; //keV
+const double delta_cut = 3.5;
 
 /*--------------------------------------------------------------------------------------------------*/
 double sigma(double E){
@@ -38,9 +38,11 @@ void makespectrum(string fname){
     //
     // get the unsmeared energy spectrum
     //
-    events->cd();
+    TTree *tt = (TTree*)gDirectory->Get("events/evt");
+//    events->cd();
+
     TH1F *_spectrum_no_smear = new TH1F("spectrum_no_smear","spectrum_no_smear",nbin,emin,emax);
-    evt->Draw("ed>>spectrum_no_smear");
+    tt->Draw("ed>>spectrum_no_smear");
     
     TH1F *_spectrum_bg   = new TH1F("h2","h2",nbin,emin,emax);
     TH1F *_spectrum_full = new TH1F("spectrum_full","spectrum_full",nbin,emin,emax);
@@ -56,7 +58,7 @@ void makespectrum(string fname){
         // get the energy in bin - ibin -
         //
         double E = _spectrum_no_smear->GetBinCenter(ibin);
-        if(E>E_cut_off){
+        if(E > E_cut_off){
             // get the y-value of teh histogram
             val = _spectrum_no_smear->GetBinContent(ibin);
             //
@@ -64,8 +66,10 @@ void makespectrum(string fname){
             // previous one, we have found a photopeak. In that case we will keep the current estimate
             // for the BG also for this bin.
             //
-            double delta = (val - val_old) / val;
-            if(delta > delta_cut) Rbg = val;
+            double delta=0;
+            if(val_old>1) delta = (val - val_old) / val_old;
+         
+            if(delta < delta_cut) Rbg = val;
             Rall = val;
             
             double sig = sigma(E)*E/2.35;
@@ -76,9 +80,9 @@ void makespectrum(string fname){
             int jmax = ibin + iwindow;
             if(jmax>nbin) jmax = nbin;
             
-            cout << ibin << " "<<E<<" R = "<<R<<" "<<sig<<" "<<jmin<<" "<<jmax<<endl;
+            cout << ibin << " "<<E<<" R = "<<Rbg<<" "<<sig<<" "<<jmin<<" "<<jmax<<" DELTA ="<<delta<<endl;
             for(int jbin = jmin; jbin<jmax; jbin++){
-                double Es = h2->GetBinCenter(jbin);
+                double Es = _spectrum_full->GetBinCenter(jbin);
                 double Rs = Rbg*TMath::Exp(-0.5*pow((E-Es)/sig,2))/sig;
                 //          cout << "      "<<jbin << " "<<Es<<" "<<Rs<<" "<<sig<<endl;
                 _spectrum_bg->Fill(Es,Rs);
@@ -90,17 +94,17 @@ void makespectrum(string fname){
     }
     
     _spectrum_full->SetLineColor(1);
-    _spectrum_full->Draw("");
+    _spectrum_full->Draw("hist");
     _spectrum_bg->SetLineColor(2);
-    _spectrum_bg->Draw("same");
+    _spectrum_bg->Draw("histsame");
     
-    TH1F *_spectrum_peak = _spectrum_full->Clone("spectrum_full");
+    TH1F *_spectrum_peak = (TH1F*)_spectrum_full->Clone("spectrum_full");
     _spectrum_peak->SetTitle("spectrum_peak");
     _spectrum_peak->SetName("spectrum_peak");
     
     _spectrum_peak->Add(_spectrum_bg,-1);
     _spectrum_peak->SetLineColor(4);
-    _spectrum_peak->Draw("same");
+    _spectrum_peak->Draw("histsame");
     
     char root_out[128];
     sprintf(root_out,"MC_%s",fname.c_str());
