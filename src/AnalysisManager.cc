@@ -68,7 +68,7 @@ AnalysisManager::BeginOfRun(const G4Run *)
     _events->cd();
     
     G4cout <<"AnalysisManager:: Init data tree ..."<<G4endl;
-    m_pTree = new TTree("events", "Event Data");
+    m_pTree = new TTree("evt", "Event Data");
     
     gROOT->ProcessLine("#include <vector>");
     

@@ -123,9 +123,9 @@ DetectorConstruction::DefineMaterials()
     Vacuum->AddElement(O, 0.245);
     
     //------------------------------------ water ------------------------
-    G4Material *Water = new G4Material("Water", 1.*g/cm3, 2, kStateLiquid);
-    Water->AddElement(H, 2);
-    Water->AddElement(O, 1);
+//    G4Material *Water = new G4Material("Water", 1.*g/cm3, 2, kStateLiquid);
+//    Water->AddElement(H, 2);
+//    Water->AddElement(O, 1);
     
     //------------------------------------ NaI   ------------------------
     G4Material *NaI = new G4Material("NaI", 3.67*g/cm3, 2, kStateSolid);
@@ -133,27 +133,27 @@ DetectorConstruction::DefineMaterials()
     NaI->AddElement( I, 1);
     
     //------------------------------------ plastic -----------------------------------
-    G4Material* PE = new G4Material("PE", 1.0*g/cm3, 2, kStateSolid);
-    PE->AddElement(C, 2);
-    PE->AddElement(H, 4);
+//    G4Material* PE = new G4Material("PE", 1.0*g/cm3, 2, kStateSolid);
+//    PE->AddElement(C, 2);
+//    PE->AddElement(H, 4);
     //------------------------------------ lead --------------------------------------
-    G4Material *Pb = pNistManager->FindOrBuildMaterial("G4_Pb");
+//    G4Material *Pb = pNistManager->FindOrBuildMaterial("G4_Pb");
     //------------------------------- stainless steel -------------------------------
-    G4Material *SS304LSteel = new G4Material("SS304LSteel", 8.00*g/cm3, 5, kStateSolid);
-    SS304LSteel->AddElement(Fe, 0.65);
-    SS304LSteel->AddElement(Cr, 0.20);
-    SS304LSteel->AddElement(Ni, 0.12);
-    SS304LSteel->AddElement(Mn, 0.02);
-    SS304LSteel->AddElement(Si, 0.01);
+//    G4Material *SS304LSteel = new G4Material("SS304LSteel", 8.00*g/cm3, 5, kStateSolid);
+//    SS304LSteel->AddElement(Fe, 0.65);
+//    SS304LSteel->AddElement(Cr, 0.20);
+//    SS304LSteel->AddElement(Ni, 0.12);
+//    SS304LSteel->AddElement(Mn, 0.02);
+//    SS304LSteel->AddElement(Si, 0.01);
     //------------------------------------ teflon -----------------------------------
     G4Material* Teflon = new G4Material("Teflon", 2.2*g/cm3, 2, kStateSolid);
     Teflon->AddElement(C, 0.240183);
     Teflon->AddElement(F, 0.759817);
     //------------------------------------ acrylic -----------------------------------
-    G4Material *Acrylic = new G4Material("Acrylic", 1.18*g/cm3, 3, kStateSolid, 168.15*kelvin, 1.5*atmosphere);
-    Acrylic->AddElement(C,5);
-    Acrylic->AddElement(H,8);
-    Acrylic->AddElement(O,2);
+//    G4Material *Acrylic = new G4Material("Acrylic", 1.18*g/cm3, 3, kStateSolid, 168.15*kelvin, 1.5*atmosphere);
+//    Acrylic->AddElement(C,5);
+//    Acrylic->AddElement(H,8);
+//    Acrylic->AddElement(O,2);
     
 }
 
@@ -226,9 +226,9 @@ DetectorConstruction::ConstructCollimatorSystem()
 
     //================================== Materials ===================================
     G4Material *NaI = G4Material::GetMaterial("NaI");
-    G4Material *PE = G4Material::GetMaterial("PE");
+//    G4Material *PE = G4Material::GetMaterial("PE");
     G4Material *Teflon = G4Material::GetMaterial("Teflon");
-    G4Material *Pb = G4Material::GetMaterial("G4_Pb");
+//    G4Material *Pb = G4Material::GetMaterial("G4_Pb");
     G4Material *Air = G4Material::GetMaterial("G4_AIR");
 
     // rotation matrix for the NaI crystal

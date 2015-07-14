@@ -3,6 +3,7 @@
 #include <G4ProcessManager.hh>
 #include <G4ProcessVector.hh>
 #include <G4ParticleDefinition.hh>
+#include <G4IonTable.hh>
 #include <G4ParticleWithCuts.hh>
 #include <G4ParticleTypes.hh>
 #include <G4ParticleTable.hh>
@@ -151,6 +152,13 @@ PhysicsList::ConstructProcess()
         hadronPhys[i]->ConstructProcess();
     }
 
+    // test the ions
+//   G4IonTable* ionTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
+//   G4double Ex = 661.659*keV;
+//   G4ParticleDefinition* ion   = ionTable->GetIon(56, 137 , Ex);
+//   ion->SetPDGStable(false);
+//  
+//   ion->SetPDGLifeTime(500*second);
 }
 
 //__________________________________________________________________________________________________________

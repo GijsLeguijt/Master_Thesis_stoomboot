@@ -32,7 +32,12 @@ StackingAction::ClassifyNewTrack(const G4Track *pTrack)
     
     G4ClassificationOfNewTrack hTrackClassification = fUrgent;
 
-	if(pTrack->GetDefinition()->GetParticleType() == "nucleus" && !pTrack->GetDefinition()->GetPDGStable())
+    //G4cout << G4endl;
+    //G4cout << "NAME     = " << pTrack->GetParticleDefinition()->GetParticleName()<<G4endl;
+    //G4cout << "TYPE     = " << pTrack->GetDefinition()->GetParticleType()<<G4endl;
+    //G4cout << "LIFETIME = " << pTrack->GetParticleDefinition()->GetPDGLifeTime()/CLHEP::second<<G4endl;
+    //G4cout << "STABLE   = " << pTrack->GetDefinition()->GetPDGStable()<<G4endl;
+    if(pTrack->GetDefinition()->GetParticleType() == "nucleus" && !pTrack->GetDefinition()->GetPDGStable())
 	{
         if(pTrack->GetParentID() > 0 && pTrack->GetCreatorProcess()->GetProcessName() == "RadioactiveDecay"){
 //            G4cout << "NAME     = " << pTrack->GetParticleDefinition()->GetParticleName()<<G4endl;
