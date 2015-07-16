@@ -5,7 +5,7 @@
 #
 # runsim.py -s <source_type> -n <number_of_events>
 #
-#   <source_type>       - which source Ti44, Co60, Cs137
+#   <source_type>       - which source ti44, co60, cs137
 #   <number_of_events>  - number of events to simulate
 #
 # A.P. Colijn - colijn@nikhef.nl
@@ -80,12 +80,16 @@ def make_G4run_script():
     fout.write('/grdm/analogueMC 1\n')
     fout.write('/gps/energy 0. eV\n')
     
-    if   source_name == 'Ti44':
+    if   source_name == 'ti44':
         fout.write('/gps/ion 22 44 \n')
-    elif source_name == 'Co60':
+    elif source_name == 'co60':
         fout.write('/gps/ion 27 60 \n')
-    elif source_name == 'Cs137':
+    elif source_name == 'cs137':
         fout.write('/gps/ion 55 137 \n')
+    else:
+        print('make_G4run_script::ERROR source '+source_name+' not recognized')
+        print('make_G4run_script::      -s <ti44, co60, cs137>')
+        sys.exit(2)
     
     fout.close()
 #--------------------------------------------------------------------------------------------
@@ -133,6 +137,8 @@ def parseArguments(argv):
         print('runsim.py -s <source_type> -n <number_of_events>')
         sys.exit(2)
     
+    source = 'NULL'
+    nevent = -1
     for opt, arg in opts:
         if opt == '-h':
             print('runsim.py -s <source_type> -n <number_of_events>')
@@ -141,6 +147,14 @@ def parseArguments(argv):
             source = arg
         elif opt in ("-n", "--nevent"):
             nevent = int(arg)
+
+    # check for errors
+    if source == 'NULL' or nevent == -1:
+        print('runsim.py -s <source_type> -n <number_of_events>')
+        sys.exit(2) 
+
+    # convert source name to lower case
+    source = source.lower()
 
     return source, nevent
 #--------------------------------------------------------------------------------------------
@@ -168,6 +182,11 @@ def get_random_seed():
     
     return ran_seed
 #--------------------------------------------------------------------------------------------
+def submit_script():
+    cmd = 'qsub -W group_list=detrd -e logfiles -o logfiles -j eo -q long '+shell_script
+    os.system(cmd)
+
+#--------------------------------------------------------------------------------------------
 # MAIN CODE
 
 # interpret the command line arguments
@@ -194,5 +213,6 @@ make_G4run_script()
 # generate run shell script
 make_shell_script()
 
-# submit the script to stoomboot
-
+# submit the job to the Nikhef stoomboot cluster
+# REMOVE IF NOT @ NIKHEF
+submit_script()
