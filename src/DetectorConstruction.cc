@@ -95,18 +95,18 @@ DetectorConstruction::DefineMaterials()
     
     //================================== elements ===================================
     pNistManager->FindOrBuildElement("U");
-    G4Element *Xe = new G4Element("Xenon",     "Xe", 54., 131.293*g/mole);
-    G4Element *H  = new G4Element("Hydrogen",  "H",  1.,  1.0079*g/mole);
+//    G4Element *Xe = new G4Element("Xenon",     "Xe", 54., 131.293*g/mole);
+//    G4Element *H  = new G4Element("Hydrogen",  "H",  1.,  1.0079*g/mole);
     G4Element *C  = new G4Element("Carbon",    "C",  6.,  12.011*g/mole);
     G4Element *N  = new G4Element("Nitrogen",  "N",  7.,  14.007*g/mole);
     G4Element *O  = new G4Element("Oxygen",    "O",  8.,  15.999*g/mole);
     G4Element *F  = new G4Element("Fluorine",  "F",  9.,  18.998*g/mole);
     //	G4Element *Al = new G4Element("Aluminium", "Al", 13., 26.982*g/mole);
     G4Element *Si = new G4Element("Silicon",   "Si", 14., 28.086*g/mole);
-    G4Element *Cr = new G4Element("Chromium",  "Cr", 24., 51.996*g/mole);
-    G4Element *Mn = new G4Element("Manganese", "Mn", 25., 54.938*g/mole);
+//    G4Element *Cr = new G4Element("Chromium",  "Cr", 24., 51.996*g/mole);
+//    G4Element *Mn = new G4Element("Manganese", "Mn", 25., 54.938*g/mole);
     G4Element *Fe = new G4Element("Iron",      "Fe", 26., 55.85*g/mole);
-    G4Element *Ni = new G4Element("Nickel",    "Ni", 28., 58.693*g/mole);
+//    G4Element *Ni = new G4Element("Nickel",    "Ni", 28., 58.693*g/mole);
     
     G4Element *Na = pNistManager->FindOrBuildElement("Na");
     G4Element *I  = pNistManager->FindOrBuildElement("I");

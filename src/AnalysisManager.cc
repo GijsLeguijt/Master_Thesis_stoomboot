@@ -173,7 +173,7 @@ AnalysisManager::EndOfEvent(const G4Event *pEvent)
         //
         // loop over all our hit collections
         //
-        for(G4int icol=0; icol<m_CollectionIDs.size(); icol++){
+        for(G4int icol=0; icol<(G4int)m_CollectionIDs.size(); icol++){
             // check if the ID of the collection is OK
             if(m_CollectionIDs[icol] != -1){
                 stdHitsCollection* pHitsCollection = 0;

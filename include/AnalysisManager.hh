@@ -8,6 +8,8 @@
 #include <G4Timer.hh>
 #include <G4ThreeVector.hh>
 
+#include <vector>
+
 class G4Run;
 class G4Event;
 class G4Step;
@@ -42,7 +44,7 @@ private:
 private:
     G4int m_LXeCollectionID;
     G4int m_NaICollectionID;
-    vector<G4int> m_CollectionIDs;
+    std::vector<G4int> m_CollectionIDs;
     
     G4String m_hDataFilename;
     G4int m_iNbEventsToSimulate;

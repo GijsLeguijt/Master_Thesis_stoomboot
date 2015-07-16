@@ -3,7 +3,7 @@
 
 #include <TFile.h>
 #include <TH1.h>
-#include <TParameter.h>
+//#include <TParameter.h>
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 
