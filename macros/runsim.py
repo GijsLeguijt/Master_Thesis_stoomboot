@@ -5,7 +5,7 @@
 #
 # runsim.py -s <source_type> -n <number_of_events>
 #
-#   <source_type>       - which source ti44, co60, cs137
+#   <source_type>       - which source ti44, co60, cs137, mn54
 #   <number_of_events>  - number of events to simulate
 #
 # A.P. Colijn - colijn@nikhef.nl
@@ -82,13 +82,15 @@ def make_G4run_script():
     
     if   source_name == 'ti44':
         fout.write('/gps/ion 22 44 \n')
+    elif source_name == 'mn54':
+        fout.write('/gps/ion 25 54 \n')
     elif source_name == 'co60':
         fout.write('/gps/ion 27 60 \n')
     elif source_name == 'cs137':
         fout.write('/gps/ion 55 137 \n')
     else:
         print('make_G4run_script::ERROR source '+source_name+' not recognized')
-        print('make_G4run_script::      -s <ti44, co60, cs137>')
+        print('make_G4run_script::      -s <ti44, co60, cs137, mn54>')
         sys.exit(2)
     
     fout.close()
