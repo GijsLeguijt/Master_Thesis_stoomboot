@@ -23,7 +23,7 @@ cd ${BASEDIR}
 source /project/atlas/nikhef/cvmfs/setup.csh
 setupATLAS
 # localSetupROOT 5.34.25-x86_64-slc6-gcc48-opt
-localSetupROOT 
+localSetupROOT 6.04.10-x86_64-slc6-gcc48-opt
 
 #--------------------------------------------------------------------------------------------
 

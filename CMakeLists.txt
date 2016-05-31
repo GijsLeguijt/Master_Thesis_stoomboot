@@ -11,6 +11,10 @@ project(G4simu)
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
 # to build a batch mode only executable
 #
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${Geant4_DIR}/Modules)
+#set(CLHEP_DIR ${Geant4_DIR}/Modules /cvmfs/geant4.cern.ch/externals/clhep/2.3.1.0/x86_64-slc6-gcc49-opt/bin/ )
+#find_package(CLHEP REQUIRED)
+
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 REQUIRED ui_all vis_all)
@@ -18,10 +22,14 @@ else()
   find_package(Geant4 REQUIRED)
 endif()
 
+
 message(STATUS " GEANT4 system dir " ${Geant4_DIR}/Modules)
 message(STATUS " GEANT4 include dirs " ${Geant4_INCLUDE_DIRS})
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${Geant4_DIR}/Modules)
+
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${Geant4_DIR}/Modules /cvmfs/geant4.cern.ch/externals/clhep/2.3.1.0/x86_64-slc6-gcc49-opt/bin/ )
+#find_package(CLHEP REQUIRED)
 message(STATUS " module path " ${CMAKE_MODULE_PATH})
 
 #----------------------------------------------------------------------------
