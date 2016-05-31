@@ -25,10 +25,10 @@ output_basedir = "/data/atlas/users/acolijn/Modulation/simulation"
 run_dir = output_basedir + "/macros"
 
 # ROOT VERSION
-ROOT_version = "5.34.25-x86_64-slc6-gcc48-opt"
+ROOT_version = "6.04.10-x86_64-slc6-gcc48-opt"
 # GEANT4 VERSION
-GEANT4_version = "10.1.p02"
-
+GEANT4_version = "/cvmfs/geant4.cern.ch/geant4/10.1.p02/x86_64-slc6-gcc48-opt/bin/"
+#GEANT4_version = "10.1.p02"
 
 #--------------------------------------------------------------------------------------------
 def make_G4preinit_script():
@@ -106,21 +106,30 @@ def make_shell_script():
     
     fout.write('# AUTOMATICALLY GENERATED FILE \n')
     fout.write(' \n')
+    fout.write('setenv BASEDIR `pwd` \n')
+    fout.write(' \n')
+    fout.write('source /cvmfs/geant4.cern.ch/etc/login.csh \n')
+    fout.write(' \n')
+    fout.write('cd '+GEANT4_version+' \n')
+    fout.write(' \n')
+    fout.write('source geant4.csh \n')
+    fout.write(' \n')
+    fout.write('cd ${BASEDIR} \n')
+    fout.write(' \n')
+
     fout.write('source /project/atlas/nikhef/cvmfs/setup.csh \n')
     fout.write(' \n')
     fout.write('setupATLAS \n')
     fout.write(' \n')
-    #fout.write('localSetupROOT '+ROOT_version+' \n')
-    fout.write('source /cvmfs/geant4.cern.ch/etc/login.csh \n')
+    fout.write('localSetupROOT '+ROOT_version+' \n')
     fout.write(' \n')
-    fout.write('cd /cvmfs/geant4.cern.ch/geant4/'+GEANT4_version+'/x86_64-slc6-gcc48-opt/bin/ \n')
+    fout.write('setenv CXX `which g++` \n')
     fout.write(' \n')
-    fout.write('source geant4.csh \n')
+    fout.write('setenv CC `which gcc` \n')
     fout.write(' \n')
     fout.write('cd '+run_dir+' \n')
     fout.write(' \n')
-    fout.write('localSetupROOT \n')
-    fout.write(' \n')
+    fout.write('setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/root/'+ROOT_version+'/lib \n')
     fout.write(simulation_basedir+'/../modusim-build/G4simu -p '+preinit_script+' -f '+run_script+' -n '+str(numberOfEvents)+' -o '+output_root)
     fout.write(' \n')
     
