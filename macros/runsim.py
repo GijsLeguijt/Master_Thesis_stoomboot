@@ -25,10 +25,10 @@ output_basedir = "/data/atlas/users/acolijn/Modulation/simulation"
 run_dir = output_basedir + "/macros"
 
 # ROOT VERSION
-ROOT_version = "6.04.10-x86_64-slc6-gcc48-opt"
-# GEANT4 VERSION
-GEANT4_version = "/cvmfs/geant4.cern.ch/geant4/10.1.p02/x86_64-slc6-gcc48-opt/bin/"
-#GEANT4_version = "10.1.p02"
+###ROOT_version = "6.04.10-x86_64-slc6-gcc48-opt"
+### GEANT4 VERSION
+###GEANT4_version = "/cvmfs/geant4.cern.ch/geant4/10.1.p02/x86_64-slc6-gcc48-opt/bin/"
+###GEANT4_version = "10.1.p02"
 
 #--------------------------------------------------------------------------------------------
 def make_G4preinit_script():
@@ -81,7 +81,11 @@ def make_G4run_script():
     fout.write('/gps/energy 0. eV\n')
     
     if   source_name == 'ti44':
-        fout.write('/gps/ion 22 44 \n')
+        fout.write('/gps/ion 22 44 0 0 \n')
+        fout.write('/grdm/nucleusLimits 44 44 22 22 \n')
+    elif source_name == 'sc44':
+        fout.write('/gps/ion 21 44 0 0 \n')
+        fout.write('/grdm/nucleusLimits 44 44 21 21 \n')
     elif source_name == 'mn54':
         fout.write('/gps/ion 25 54 \n')
     elif source_name == 'co60':
@@ -90,7 +94,7 @@ def make_G4run_script():
         fout.write('/gps/ion 55 137 \n')
     else:
         print('make_G4run_script::ERROR source '+source_name+' not recognized')
-        print('make_G4run_script::      -s <ti44, co60, cs137, mn54>')
+        print('make_G4run_script::      -s <ti44, sc44, co60, cs137, mn54>')
         sys.exit(2)
     
     fout.close()
