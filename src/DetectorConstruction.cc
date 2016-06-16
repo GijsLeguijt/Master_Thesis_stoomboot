@@ -167,7 +167,9 @@ DetectorConstruction::DefineGeometryParameters()
     m_hGeometryParameters["NaI_crystal_Z"] = 76*mm;
     //================================== Disk source ================================
     m_hGeometryParameters["SourceDisk_R"] = 76*mm/2;
-    m_hGeometryParameters["SourceDisk_Z"] = 6*mm;
+    // 16-06-2016 APC: bug .... SourceDisk_Z  is 6.35mm, so here value should be 6.35mm/2
+// THIS IS WRONG    m_hGeometryParameters["SourceDisk_Z"] = 6*mm;
+    m_hGeometryParameters["SourceDisk_Z"] = 6.30*mm/2; // leave a bit of space between detector and source block....
     // little sphere in middle of disk
     m_hGeometryParameters["SourceCore_R"] = 1.0*mm;
 }

@@ -11,9 +11,6 @@ project(G4simu)
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
 # to build a batch mode only executable
 #
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${Geant4_DIR}/Modules)
-#set(CLHEP_DIR ${Geant4_DIR}/Modules /cvmfs/geant4.cern.ch/externals/clhep/2.3.1.0/x86_64-slc6-gcc49-opt/bin/ )
-#find_package(CLHEP REQUIRED)
 
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 if(WITH_GEANT4_UIVIS)
@@ -22,14 +19,10 @@ else()
   find_package(Geant4 REQUIRED)
 endif()
 
-
 message(STATUS " GEANT4 system dir " ${Geant4_DIR}/Modules)
 message(STATUS " GEANT4 include dirs " ${Geant4_INCLUDE_DIRS})
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${Geant4_DIR}/Modules)
-
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${Geant4_DIR}/Modules /cvmfs/geant4.cern.ch/externals/clhep/2.3.1.0/x86_64-slc6-gcc49-opt/bin/ )
-#find_package(CLHEP REQUIRED)
 message(STATUS " module path " ${CMAKE_MODULE_PATH})
 
 #----------------------------------------------------------------------------
@@ -69,10 +62,11 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-#set(CMAKE_CXX_FLAGS "-Wno-shadow -std=gnu++0x -std=c++0x" )
+#set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wno-shadow -std=gnu++0x -std=c++0x" )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-shadow " )
 #set(CMAKE_CXX_FLAGS " -Wno-shadow " )
 add_executable(G4simu G4simu.cc ${sources} ${headers})
+message(STATUS "root libs " ${ROOT_LIBRARIES})
 target_link_libraries(G4simu ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} -std=c++0x)
 # target_link_libraries(G4simu ${ROOT_LIBRARIES})
 

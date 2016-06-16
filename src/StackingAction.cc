@@ -42,8 +42,8 @@ StackingAction::ClassifyNewTrack(const G4Track *pTrack)
         if(pTrack->GetParentID() > 0 && pTrack->GetCreatorProcess()->GetProcessName() == "RadioactiveDecay"){
 //            G4cout << "NAME     = " << pTrack->GetParticleDefinition()->GetParticleName()<<G4endl;
 //            G4cout << "LIFETIME = " << pTrack->GetParticleDefinition()->GetPDGLifeTime()/CLHEP::second<<G4endl;
-     
-			hTrackClassification = fPostpone;
+// be carefull with teh postpone! it can make a new event of a daughter nucleus with just a bit of kinetic energy....    
+//			hTrackClassification = fPostpone;
         }
     }
 
