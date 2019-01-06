@@ -78,6 +78,7 @@ def make_G4run_script():
     fout.write('/grdm/fBeta 0\n')
     fout.write('/grdm/verbose 0\n')
     fout.write('/grdm/analogueMC 1\n')
+    fout.write('/gps/particle ion\n')
     fout.write('/gps/energy 0. eV\n')
     
     if   source_name == 'ti44':

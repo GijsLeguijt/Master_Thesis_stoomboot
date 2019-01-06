@@ -54,9 +54,11 @@ void makespectrum(string basename, string source_name){
     //
     // get the unsmeared energy spectrum
     //
+    cout << "fill histo"<<endl;
     TH1F *_spectrum_no_smear = new TH1F("spectrum_no_smear","spectrum_no_smear",nbin,emin,emax);
     tt->Draw("ed>>spectrum_no_smear");
-    
+    cout << "fill histo done"<<endl;
+
     TH1F *_spectrum_bg   = new TH1F("h2","h2",nbin,emin,emax);
     TH1F *_spectrum_full = new TH1F("spectrum_full","spectrum_full",nbin,emin,emax);
     
