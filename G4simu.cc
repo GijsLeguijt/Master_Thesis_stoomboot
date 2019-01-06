@@ -22,7 +22,7 @@
 
 // SVN
 
-void usage();
+void usage(); 
 
 /* 
  * Main: G4simu
