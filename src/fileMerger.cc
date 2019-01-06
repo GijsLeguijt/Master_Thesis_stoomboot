@@ -130,7 +130,7 @@ void fileMerger::CleanUp(){
     system(shellCommand);
   }
   
-  std::cout << "fileMerger::CleanUp() Done "<<std::endl;
+  std::cout << "fileMerger::CleanUp() Done... "<<std::endl;
 }
 
 //_________________________________________________________________________________________________________
