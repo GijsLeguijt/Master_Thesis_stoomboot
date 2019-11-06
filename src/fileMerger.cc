@@ -27,7 +27,6 @@ fileMerger::fileMerger(std::string file0, std::vector<std::string> files1)
 
 //_________________________________________________________________________________________________________
 
-
 void fileMerger::CopyDir(TDirectory *source, Int_t ilevel) {
   Int_t ntree = 0;
   
@@ -103,18 +102,18 @@ void fileMerger::CopyFile(const char *fname) {
 void fileMerger::Merge(){
   //main function copying 4 files as subdirectories of a new file
   
-  std::cout << "fileMerger::Merge() Merging root files .... "<<std::endl;
+  std::cout << "fileMerger::Merge() Merging root files .... " << std::endl;
   TFile *f = new TFile(masterfile.c_str(),"update");
-  std::cout << "fileMerger::Merge()          master file:  "<<masterfile.c_str()<<std::endl;
+  std::cout << "fileMerger::Merge()          master file:  " << masterfile.c_str() << std::endl;
 
-  for(int i=0; i<(int)auxfiles.size(); i++){
+  for(int i = 0; i < (int)auxfiles.size(); i++){
     std::string auxfile = auxfiles[i];
-    std::cout << "fileMerger::Merge()          adding file:  "<<auxfile.c_str()<<std::endl;
+    std::cout << "fileMerger::Merge()          adding file:  " << auxfile.c_str() << std::endl;
     CopyFile(auxfile.c_str());
   }
 
   delete f;
-  std::cout << "fileMerger::Merge() Done "<<std::endl;
+  std::cout << "fileMerger::Merge() Done " << std::endl;
 }
 
 //_________________________________________________________________________________________________________
@@ -123,14 +122,14 @@ void fileMerger::CleanUp(){
   //main function copying 4 files as subdirectories of a new file
 
   char shellCommand[100]; 
-  for(int i=0; i<(int)auxfiles.size(); i++){
+  for(int i = 0; i < (int)auxfiles.size(); i++){
     std::string auxfile = auxfiles[i];
-    std::cout << "fileMerger::CleanUp()          removefile:  "<<auxfile.c_str()<<std::endl;
+    std::cout << "fileMerger::CleanUp()          removefile:  " << auxfile.c_str() << std::endl;
     sprintf(shellCommand,"rm -f %s",auxfile.c_str());
     system(shellCommand);
   }
   
-  std::cout << "fileMerger::CleanUp() Done... "<<std::endl;
+  std::cout << "fileMerger::CleanUp() Done... " << std::endl;
   
 }
 

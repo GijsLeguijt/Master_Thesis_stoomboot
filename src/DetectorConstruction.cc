@@ -50,33 +50,33 @@ using namespace CLHEP;
 
 map<G4String, G4double> DetectorConstruction::m_hGeometryParameters;
 
+//__________________________________________________________________________________________________________
+
 DetectorConstruction::DetectorConstruction(G4String fName)
 {
     m_pDetectorMessenger = new DetectorMessenger(this);
-    detRootFile = fName;
-    
-    m_hSourcePosition = 0*cm;
-    m_hNaIPosition    = 41.175*mm;
-
+    detRootFile          = fName;
 }
+
+//__________________________________________________________________________________________________________
 
 DetectorConstruction::~DetectorConstruction()
 {
     delete m_pDetectorMessenger;
 }
 
+//__________________________________________________________________________________________________________
 
 G4VPhysicalVolume*
 DetectorConstruction::Construct()
 {
-    
     DefineMaterials();
     
     DefineGeometryParameters();
     
     // construction of the geometry
     ConstructLaboratory();
-    // NaI detectors + source
+    // TPC
     ConstructCollimatorSystem();
     // make the appropriate components active
     ConstructSD();
@@ -88,91 +88,106 @@ DetectorConstruction::Construct()
     return m_pLabPhysicalVolume;
 }
 
+//__________________________________________________________________________________________________________
+
 void
 DetectorConstruction::DefineMaterials()
 {
     G4NistManager* pNistManager = G4NistManager::Instance();
     
-    //================================== elements ===================================
-    pNistManager->FindOrBuildElement("U");
-//    G4Element *Xe = new G4Element("Xenon",     "Xe", 54., 131.293*g/mole);
-//    G4Element *H  = new G4Element("Hydrogen",  "H",  1.,  1.0079*g/mole);
-    G4Element *C  = new G4Element("Carbon",    "C",  6.,  12.011*g/mole);
-    G4Element *N  = new G4Element("Nitrogen",  "N",  7.,  14.007*g/mole);
-    G4Element *O  = new G4Element("Oxygen",    "O",  8.,  15.999*g/mole);
-    G4Element *F  = new G4Element("Fluorine",  "F",  9.,  18.998*g/mole);
-    //	G4Element *Al = new G4Element("Aluminium", "Al", 13., 26.982*g/mole);
-    G4Element *Si = new G4Element("Silicon",   "Si", 14., 28.086*g/mole);
-//    G4Element *Cr = new G4Element("Chromium",  "Cr", 24., 51.996*g/mole);
-//    G4Element *Mn = new G4Element("Manganese", "Mn", 25., 54.938*g/mole);
-    G4Element *Fe = new G4Element("Iron",      "Fe", 26., 55.85*g/mole);
-//    G4Element *Ni = new G4Element("Nickel",    "Ni", 28., 58.693*g/mole);
+    //========================================= elements ==========================================
     
-    G4Element *Na = pNistManager->FindOrBuildElement("Na");
-    G4Element *I  = pNistManager->FindOrBuildElement("I");
-    //================================== materials ==================================
+    G4Element *H  = new G4Element("Hydrogen",  "H",   1.,  1.0079 *g/mole);
+    G4Element *C  = new G4Element("Carbon",    "C",   6., 12.011  *g/mole);
+    G4Element *N  = new G4Element("Nitrogen",  "N",   7., 14.007  *g/mole);
+    G4Element *O  = new G4Element("Oxygen",    "O",   8., 15.999  *g/mole);
+    G4Element *F  = new G4Element("Fluorine",  "F",   9., 18.998  *g/mole);
+    G4Element *Si = new G4Element("Silicon",   "Si", 14., 28.086  *g/mole);
+    G4Element *Cr = new G4Element("Chromium",  "Cr", 24., 51.996  *g/mole);
+    G4Element *Mn = new G4Element("Manganese", "Mn", 25., 54.938  *g/mole);
+    G4Element *Fe = new G4Element("Iron",      "Fe", 26., 55.85   *g/mole);
+    G4Element *Ni = new G4Element("Nickel",    "Ni", 28., 58.693  *g/mole);
     
-    //------------------------------------- air -------------------------------------
-    //G4Material *Air = pNistManager->FindOrBuildMaterial("G4_AIR");
-    //G4Material *Air = G4Material::GetMaterial("G4_AIR");
+    //========================================= materials =========================================
     
-    
-    //----------------------------------- vacuum ------------------------------------
+    //------------------------------------------ vacuum -------------------------------------------
     G4Material *Vacuum = new G4Material("Vacuum", 1.e-20*g/cm3, 2, kStateGas);
     Vacuum->AddElement(N, 0.755);
     Vacuum->AddElement(O, 0.245);
     
-    //------------------------------------ water ------------------------
-//    G4Material *Water = new G4Material("Water", 1.*g/cm3, 2, kStateLiquid);
-//    Water->AddElement(H, 2);
-//    Water->AddElement(O, 1);
-    
-    //------------------------------------ NaI   ------------------------
-    G4Material *NaI = new G4Material("NaI", 3.67*g/cm3, 2, kStateSolid);
-    NaI->AddElement(Na, 1);
-    NaI->AddElement( I, 1);
-    
-    //------------------------------------ plastic -----------------------------------
-//    G4Material* PE = new G4Material("PE", 1.0*g/cm3, 2, kStateSolid);
-//    PE->AddElement(C, 2);
-//    PE->AddElement(H, 4);
-    //------------------------------------ lead --------------------------------------
-//    G4Material *Pb = pNistManager->FindOrBuildMaterial("G4_Pb");
-    //------------------------------- stainless steel -------------------------------
-//    G4Material *SS304LSteel = new G4Material("SS304LSteel", 8.00*g/cm3, 5, kStateSolid);
-//    SS304LSteel->AddElement(Fe, 0.65);
-//    SS304LSteel->AddElement(Cr, 0.20);
-//    SS304LSteel->AddElement(Ni, 0.12);
-//    SS304LSteel->AddElement(Mn, 0.02);
-//    SS304LSteel->AddElement(Si, 0.01);
-    //------------------------------------ teflon -----------------------------------
-    G4Material* Teflon = new G4Material("Teflon", 2.2*g/cm3, 2, kStateSolid);
-    Teflon->AddElement(C, 0.240183);
-    Teflon->AddElement(F, 0.759817);
-    //------------------------------------ acrylic -----------------------------------
-//    G4Material *Acrylic = new G4Material("Acrylic", 1.18*g/cm3, 3, kStateSolid, 168.15*kelvin, 1.5*atmosphere);
-//    Acrylic->AddElement(C,5);
-//    Acrylic->AddElement(H,8);
-//    Acrylic->AddElement(O,2);
+    //-------------------------------------------- air --------------------------------------------
+    G4Material *Air = pNistManager->FindOrBuildMaterial("G4_AIR");
+
+    //------------------------------------------- xenon -------------------------------------------
+    G4Element *Xe = pNistManager->FindOrBuildElement("Xe");
+    G4Material *LXe = new G4Material("LXe", 3.0*g/cm3, 1, kStateLiquid);
+    LXe->AddElement(Xe, 1.000);
+
+    //-------------------------------------- Xenon-Isotopes ---------------------------------------
+    G4Isotope *iso_Xe124 = new G4Isotope("Xe124", 54, 124, 124*g/mole);
+    G4Isotope *iso_Xe126 = new G4Isotope("Xe126", 54, 126, 126*g/mole);
+    G4Isotope *iso_Xe128 = new G4Isotope("Xe128", 54, 128, 128*g/mole);
+    G4Isotope *iso_Xe129 = new G4Isotope("Xe129", 54, 129, 129*g/mole);
+    G4Isotope *iso_Xe130 = new G4Isotope("Xe130", 54, 130, 130*g/mole);
+    G4Isotope *iso_Xe131 = new G4Isotope("Xe131", 54, 131, 131*g/mole);
+    G4Isotope *iso_Xe132 = new G4Isotope("Xe132", 54, 132, 132*g/mole);
+    G4Isotope *iso_Xe134 = new G4Isotope("Xe134", 54, 134, 134*g/mole);
+    G4Isotope *iso_Xe136 = new G4Isotope("Xe136", 54, 136, 136*g/mole);
+
+    // Adding the isotopes as elements such that cross-sections are plotted
+    G4Element  *ele_Xe124 = new G4Element("element Xe124", "Xe", 1);
+    ele_Xe124->AddIsotope(iso_Xe124, 100.*perCent);
+    G4Element  *ele_Xe126 = new G4Element("element Xe126", "Xe", 1);
+    ele_Xe126->AddIsotope(iso_Xe126, 100.*perCent);
+    G4Element  *ele_Xe128 = new G4Element("element Xe128", "Xe", 1);
+    ele_Xe128->AddIsotope(iso_Xe128, 100.*perCent);
+    G4Element  *ele_Xe129 = new G4Element("element Xe129", "Xe", 1);
+    ele_Xe129->AddIsotope(iso_Xe129, 100.*perCent);
+    G4Element  *ele_Xe130 = new G4Element("element Xe130", "Xe", 1);
+    ele_Xe130->AddIsotope(iso_Xe130, 100.*perCent);
+    G4Element  *ele_Xe131 = new G4Element("element Xe131", "Xe", 1);
+    ele_Xe131->AddIsotope(iso_Xe131, 100.*perCent);
+    G4Element  *ele_Xe132 = new G4Element("element Xe132", "Xe", 1);
+    ele_Xe132->AddIsotope(iso_Xe132, 100.*perCent);
+    G4Element  *ele_Xe134 = new G4Element("element Xe134", "Xe", 1);
+    ele_Xe134->AddIsotope(iso_Xe134, 100.*perCent);
+    G4Element  *ele_Xe136 = new G4Element("element Xe136", "Xe", 1);
+    ele_Xe136->AddIsotope(iso_Xe136, 100.*perCent);
+
+    //-------------------------------------- stainless steel --------------------------------------
+    G4Material *SS304LSteel = new G4Material("SS304LSteel", 8.00*g/cm3, 5, kStateSolid);
+    SS304LSteel->AddElement(Fe, 0.65);
+    SS304LSteel->AddElement(Cr, 0.20);
+    SS304LSteel->AddElement(Ni, 0.12);
+    SS304LSteel->AddElement(Mn, 0.02);
+    SS304LSteel->AddElement(Si, 0.01);
+
+    //------------------------------------------ teflon -------------------------------------------
+    // G4Material* Teflon = new G4Material("Teflon", 2.2*g/cm3, 2, kStateSolid);
+    // Teflon->AddElement(C, 0.240183);
+    // Teflon->AddElement(F, 0.759817);
     
 }
+
+//__________________________________________________________________________________________________________
 
 void
 DetectorConstruction::DefineGeometryParameters()
 {
-    //================================== Laboratory =================================
-    m_hGeometryParameters["LabSize"] = 0.5*m;
-    //================================== NaI crystal ================================
-    m_hGeometryParameters["NaI_crystal_R"] = 76*mm/2;
-    m_hGeometryParameters["NaI_crystal_Z"] = 76*mm;
-    //================================== Disk source ================================
-    m_hGeometryParameters["SourceDisk_R"] = 76*mm/2;
-    // 16-06-2016 APC: bug .... SourceDisk_Z  is 6.35mm, so here value should be 6.35mm/2
-// THIS IS WRONG    m_hGeometryParameters["SourceDisk_Z"] = 6*mm;
-    m_hGeometryParameters["SourceDisk_Z"] = 6.30*mm/2; // leave a bit of space between detector and source block....
-    // little sphere in middle of disk
-    m_hGeometryParameters["SourceCore_R"] = 1.0*mm;
+    //======================================== Laboratory =========================================
+    m_hGeometryParameters["LabSize"]    = 250   * cm;
+    //============================================ TPC ============================================
+    m_hGeometryParameters["TPC_outerR"] =  65.5 * cm;
+    m_hGeometryParameters["TPC_Z"]      = 151   * cm;
+    //============================================ LXe ============================================
+    m_hGeometryParameters["LXe_outerR"] =  65   * cm;
+    m_hGeometryParameters["LXe_Z"]      = 150   * cm;
+    //============================================= FV ============================================
+    m_hGeometryParameters["FV_outerR"] =  57   * cm;
+    m_hGeometryParameters["FV_Z"]      = 134   * cm;
 }
+
+//__________________________________________________________________________________________________________
 
 G4double
 DetectorConstruction::GetGeometryParameter(const char *szParameter)
@@ -180,20 +195,16 @@ DetectorConstruction::GetGeometryParameter(const char *szParameter)
     return m_hGeometryParameters[szParameter];
 }
 
+//__________________________________________________________________________________________________________
+
 void
 DetectorConstruction::ConstructLaboratory()
 {
-    //================================== Laboratory =================================
+    //======================================== Laboratory =========================================
     const G4double dLabHalfSize = 0.5*GetGeometryParameter("LabSize");
     
-    //G4Material *Air = G4Material::GetMaterial("G4_AIR");
-    G4NistManager* pNistManager = G4NistManager::Instance();
+    G4Material *Air = G4Material::GetMaterial("G4_AIR");
 
-    G4Material *Air = pNistManager->FindOrBuildMaterial("G4_AIR");
-
-    
-    //G4Material *Air = G4Material::GetMaterial("G4_AIR");
-    
     G4Box *pLabBox         = new G4Box("LabBox", dLabHalfSize, dLabHalfSize, dLabHalfSize);
     m_pLabLogicalVolume    = new G4LogicalVolume(pLabBox, Air, "LabVolume", 0, 0, 0);
     m_pLabPhysicalVolume   = new G4PVPlacement(0, G4ThreeVector(), m_pLabLogicalVolume, "Lab", 0, false, 0);
@@ -203,101 +214,80 @@ DetectorConstruction::ConstructLaboratory()
 
 }
 
+//__________________________________________________________________________________________________________
+
 void
 DetectorConstruction::ConstructSD()
 {
     G4SDManager* SDman = G4SDManager::GetSDMpointer();
     G4String SDname;
     
-    // make NaI sensitive
-    G4VSensitiveDetector* NaI_SD = new SensitiveDetector(SDname="/NaI");
-    SDman->AddNewDetector(NaI_SD);
-    m_pNaI_crystal1_LogicalVolume->SetSensitiveDetector(NaI_SD);
-   // m_pNaI_crystal2_LogicalVolume->SetSensitiveDetector(NaI_SD);
+    // make LXe sensitive
+    G4VSensitiveDetector* LXe_SD = new SensitiveDetector(SDname="/LXe");
+    SDman->AddNewDetector(LXe_SD);
+    m_pLXe_LogicalVolume->SetSensitiveDetector(LXe_SD);
 
 }
 
+//__________________________________________________________________________________________________________
 
 void
 DetectorConstruction::ConstructCollimatorSystem()
 {
-    //================================== NaI crystal =================================
-    const G4double dCrystalRadius =     GetGeometryParameter("NaI_crystal_R");
-    const G4double dCrystalHalfZ  = 0.5*GetGeometryParameter("NaI_crystal_Z");
     
+    //========================================= Materials =========================================
+    G4Material *LXe    = G4Material::GetMaterial("LXe");
+    G4Material *SSteel = G4Material::GetMaterial("SS304LSteel");
 
-    //================================== Materials ===================================
-    G4Material *NaI = G4Material::GetMaterial("NaI");
-//    G4Material *PE = G4Material::GetMaterial("PE");
-    G4Material *Teflon = G4Material::GetMaterial("Teflon");
-//    G4Material *Pb = G4Material::GetMaterial("G4_Pb");
-    G4Material *Air = G4Material::GetMaterial("G4_AIR");
+    // rotation matrix for the TPC
+    G4RotationMatrix *pRot      = new G4RotationMatrix();
+    G4RotationMatrix *pRot_idle = new G4RotationMatrix();
+    //pRot->rotateY(90.*deg);
+       
+    //================================ Construction Xenon and TPC =================================
+    const G4double dTPCouterRadius =     GetGeometryParameter("TPC_outerR");
+    const G4double dTPCHalfZ       = 0.5*GetGeometryParameter("TPC_Z");
+    const G4double dLXeouterRadius =     GetGeometryParameter("LXe_outerR");
+    const G4double dLXeHalfZ       = 0.5*GetGeometryParameter("LXe_Z");
+    
+    G4Tubs *pTPC   			= new G4Tubs("TPC",	0.*cm,
+												dTPCouterRadius,
+												dTPCHalfZ,
+												0.*deg, 360.*deg);
+    m_pTPC_LogicalVolume	= new G4LogicalVolume(pTPC, SSteel, "TPCTUBS", 0, 0, 0);
+    m_pTPC_PhysicalVolume 	= new G4PVPlacement(pRot, G4ThreeVector(0,0,0),
+                                                        m_pTPC_LogicalVolume,
+                                                        "TPC",
+                                                        m_pMotherLogicalVolume,
+                                                        false, 0);
 
-    // rotation matrix for the NaI crystal
-    G4RotationMatrix *pRot = new G4RotationMatrix();
-    pRot->rotateY(90.*deg);
-    
-    //================================== Construction =================================
-    // make and place one NaI crystal
-    G4Tubs *pNaI_crystal1			= new G4Tubs("NaI_crystal1",
-													0.*cm,
-													dCrystalRadius,
-													dCrystalHalfZ,
-													0.*deg, 360.*deg);
-    m_pNaI_crystal1_LogicalVolume	= new G4LogicalVolume(pNaI_crystal1, NaI, "NaI_crystalTUBS", 0, 0, 0);
-    m_pNaI_crystal1_PhysicalVolume 	= new G4PVPlacement(pRot, G4ThreeVector(m_hNaIPosition,0,0),
-        m_pNaI_crystal1_LogicalVolume, "NaI_crystal1", m_pMotherLogicalVolume, false, 0);
-    
-    G4Tubs *pNaI_crystal2			= new G4Tubs("NaI_crystal2",
-                                                 0.*cm,
-                                                 dCrystalRadius,
-                                                 dCrystalHalfZ,
-                                                 0.*deg, 360.*deg);
-    m_pNaI_crystal2_LogicalVolume	= new G4LogicalVolume(pNaI_crystal2, NaI, "NaI_crystalTUBS", 0, 0, 0);
-    m_pNaI_crystal2_PhysicalVolume 	= new G4PVPlacement(pRot, G4ThreeVector(-m_hNaIPosition,0,0), m_pNaI_crystal2_LogicalVolume, "NaI_crystal2", m_pMotherLogicalVolume, false, 0);
-    
-    
-    // make and place the source
-    G4cout <<"DetectorConstruction::ConstructCollimatorSystem:: Source at "<<m_hSourcePosition/cm<<" cm" <<G4endl;
-    G4Tubs *pSourceDisk         	 = new G4Tubs("SourceDisk",
-    											0.*cm,
-    											GetGeometryParameter("SourceDisk_R"),
-    											GetGeometryParameter("SourceDisk_Z")/2,
+    G4Tubs *pLXe_volume     = new G4Tubs("LXe",	0.*cm,
+    											dLXeouterRadius,
+    											dLXeHalfZ,
     											0.*deg, 360.*deg);
-    m_pSourceDisk_LogicalVolume 	 = new G4LogicalVolume(pSourceDisk, Teflon, "SourceDisk", 0, 0, 0);
-    m_pSourceDisk_PhysicalVolume	 = new G4PVPlacement(pRot, G4ThreeVector(0,0,0), m_pSourceDisk_LogicalVolume,
-                                                     "SourceDisk", m_pMotherLogicalVolume, false, 0);
-    
+    m_pLXe_LogicalVolume 	= new G4LogicalVolume(pLXe_volume, LXe, "LXe", 0, 0, 0);
+    m_pLXe_PhysicalVolume	= new G4PVPlacement(pRot_idle, G4ThreeVector(0,0,0),
+                                                        m_pLXe_LogicalVolume,
+                                                        "LXe",
+                                                        m_pTPC_LogicalVolume,
+                                                        false, 0);
+                                                
 
-    G4Orb *pSourceCore				 = new G4Orb("SourceCore",
-    										GetGeometryParameter("SourceCore_R"));
-    m_pSourceCore_LogicalVolume 	 = new G4LogicalVolume(pSourceCore, Teflon, "SourceCore", 0, 0, 0);
-    m_pSourceCore_PhysicalVolume 	 = new G4PVPlacement(pRot, G4ThreeVector(0,0,0), m_pSourceCore_LogicalVolume,
-                                                     "SourceCore", m_pSourceDisk_LogicalVolume, false, 0);
-
-    // visibility
-    G4Colour hTitaniumColor(0.600, 0.600, 0.600, 0.4);
-    G4VisAttributes *pTitaniumVisAtt = new G4VisAttributes(hTitaniumColor);
-    pTitaniumVisAtt->SetVisibility(true);
-    m_pNaI_crystal1_LogicalVolume->SetVisAttributes(pTitaniumVisAtt);
-    m_pNaI_crystal2_LogicalVolume->SetVisAttributes(pTitaniumVisAtt);
-    m_pSourceDisk_LogicalVolume -> SetVisAttributes(pTitaniumVisAtt);
-
-    G4cout <<"end sysdef"<<G4endl;
+    G4cout << "end sysdef" << G4endl;
 }
 
+//__________________________________________________________________________________________________________
 
 void
 DetectorConstruction::PrintGeometryInformation()
 {
-    //================================== Water =================================
-    //	const G4double dWaterMass = m_pWaterLogicalVolume->GetMass(false, false)/(1000.*kg);
-    //	G4cout << "Water Mass:                               " << dWaterMass << " ton" << G4endl << G4endl;
 }
+
+//__________________________________________________________________________________________________________
 
 void DetectorConstruction::MakeDetectorPlots()
 {
-    _fGeom = new TFile(detRootFile,"RECREATE");
+    _fGeom    = new TFile(detRootFile,"RECREATE");
     _detector = _fGeom->mkdir("detector");
     
     // store properties of the materials that are used
@@ -310,52 +300,39 @@ void DetectorConstruction::MakeDetectorPlots()
     
 }
 
+//__________________________________________________________________________________________________________
+
 void DetectorConstruction::StoreGeometryParameters()
 {
     // TDirectory for storage of teh geometry parameters
     TDirectory *_geometry = _detector->mkdir("geometry");
     _geometry->cd();
-    
-    // NaI crystal
-    TParameter<double> *NaI_R = new TParameter<double>("NaI_crystal_R",GetGeometryParameter("NaI_crystal_R")/mm);
-    NaI_R->Write();
-    TParameter<double> *NaI_Z = new TParameter<double>("NaI_crystal_Z",GetGeometryParameter("NaI_crystal_Z")/mm);
-    NaI_Z->Write();
-    TParameter<double> *NaI_pos = new TParameter<double>("NaI_crystal_Position",m_hNaIPosition/mm);
-    NaI_pos->Write();
-
-    // Source
-    TParameter<double> *Source_R = new TParameter<double>("SourceDisk_R",GetGeometryParameter("SourceDisk_R")/mm);
-    Source_R->Write();
-    TParameter<double> *Source_Z = new TParameter<double>("SourceDisk_Z",GetGeometryParameter("SourceDisk_Z")/mm);
-    Source_Z->Write();
-    TParameter<double> *Source_pos = new TParameter<double>("SourceDisk_Position",m_hSourcePosition/mm);
-    Source_pos->Write();
-    
+        
     _fGeom->cd();
 }
 
+//__________________________________________________________________________________________________________
 
 void DetectorConstruction::StoreMaterialParameters()
 {
     
     // make a list of materials for graphs
     G4int nmaterial = G4Material::GetNumberOfMaterials();
-    G4cout <<"MakeDetectorPlots:: Number of materials = "<<nmaterial<<G4endl;
+    G4cout << "MakeDetectorPlots:: Number of materials = " << nmaterial << G4endl;
     
     TDirectory *_materials = _detector->mkdir("materials");
     _materials->cd();
     
-    //  for(G4int imat=0; imat<(G4int)matNames.size(); imat++){
+
     vector<TDirectory*> matdirs;
     
     for(G4int imat=0; imat<nmaterial; imat++){
-        G4Material *mat = G4NistManager::Instance()->GetMaterial(imat);
+        G4Material *mat  = G4NistManager::Instance()->GetMaterial(imat);
         G4String matname = mat->GetName();
-        G4cout <<"MakeDetectorPlots:: "<<matname<<G4endl;
-        G4double T   = mat->GetTemperature();
-        G4double rho = mat->GetDensity();
-        G4double P   = mat->GetPressure();
+        G4cout << "MakeDetectorPlots:: " << matname << G4endl;
+        G4double T       = mat->GetTemperature();
+        G4double rho     = mat->GetDensity();
+        G4double P       = mat->GetPressure();
         
         matdirs.push_back(_materials->mkdir(matname));
         matdirs[imat]->cd();
@@ -370,7 +347,7 @@ void DetectorConstruction::StoreMaterialParameters()
         G4ElementVector *elems       = (G4ElementVector*)mat->GetElementVector();
         G4double        *fractionVec = (G4double*)mat->GetFractionVector();
         
-        for(size_t iele=0; iele<nele; iele++){
+        for(size_t iele = 0; iele < nele; iele++){
             G4String elname = (*elems)[iele]->GetName();
             G4double frac   = fractionVec[iele];
             //      G4cout <<iele<<" elem = "<<(*elems)[iele]->GetName()<<" f = "<<fractionVec[iele]<<G4endl;
@@ -386,3 +363,5 @@ void DetectorConstruction::StoreMaterialParameters()
     
     _fGeom->cd();
 }
+
+//__________________________________________________________________________________________________________

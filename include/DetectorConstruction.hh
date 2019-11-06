@@ -31,11 +31,7 @@ public:
     
     G4VPhysicalVolume* Construct();
     static G4double GetGeometryParameter(const char *szParameter);
-    // function needed by DetectorMessenger
-    void SetSourcePos(G4double x)    { m_hSourcePosition = x; }
-    void SetNaIPos(G4double x)    { m_hNaIPosition = x; }
-
-    
+        
     
 private:
     void DefineMaterials();
@@ -56,37 +52,23 @@ private:
     G4LogicalVolume *m_pMotherLogicalVolume;
     G4LogicalVolume *m_pLabLogicalVolume;
     
-    // NaI detector setup
-    G4LogicalVolume *m_pNaI_crystal1_LogicalVolume;
-    G4LogicalVolume *m_pNaI_crystal2_LogicalVolume;
+    // detector setup
+    G4LogicalVolume *m_pTPC_LogicalVolume;
+    G4LogicalVolume *m_pLXe_LogicalVolume;
     G4LogicalVolume *m_pCollimator_LogicalVolume;
-    
-    // Source
-    G4LogicalVolume *m_pSourceDisk_LogicalVolume;
-    G4LogicalVolume *m_pSourceCore_LogicalVolume;
-    
-
-
+        
     // == PHYSICAL VOLUMES ==
     G4VPhysicalVolume *m_pLabPhysicalVolume;
 
     // Collimator setup
-    G4VPhysicalVolume *m_pNaI_crystal1_PhysicalVolume;
-    G4VPhysicalVolume *m_pNaI_crystal2_PhysicalVolume;
+    G4VPhysicalVolume *m_pTPC_PhysicalVolume;
+    G4VPhysicalVolume *m_pLXe_PhysicalVolume;
     G4VPhysicalVolume *	m_pCollimator_PhysicalVolume;
-    
-    // Source
-    G4VPhysicalVolume *m_pSourceDisk_PhysicalVolume;
-    G4VPhysicalVolume *m_pSourceCore_PhysicalVolume;
-    
     
     static map<G4String, G4double> m_hGeometryParameters;
     
     DetectorMessenger *m_pDetectorMessenger;
-    G4double           m_hSourcePosition;
-    G4double           m_hNaIPosition;
 
-    
     // ROOT stuff
     TFile      *_fGeom;
     G4String    detRootFile;

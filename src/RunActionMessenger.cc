@@ -18,6 +18,8 @@
 #include "RunActionMessenger.hh"
 #include "RunAction.hh"
 
+//__________________________________________________________________________________________________________
+
 RunActionMessenger::RunActionMessenger(RunAction *pRunAction):
 m_pRunAction(pRunAction)
 {
@@ -33,10 +35,14 @@ m_pRunAction(pRunAction)
 
 }
 
+//__________________________________________________________________________________________________________
+
 RunActionMessenger::~RunActionMessenger()
 {
 	delete m_pDirectory;
 }
+
+//__________________________________________________________________________________________________________
 
 void
 RunActionMessenger::SetNewValue(G4UIcommand * command, G4String newValues)
@@ -45,3 +51,4 @@ RunActionMessenger::SetNewValue(G4UIcommand * command, G4String newValues)
 		m_pRunAction->SetRanSeed(m_pRanSeedCmd->GetNewIntValue(newValues));
 }
 
+//__________________________________________________________________________________________________________

@@ -21,6 +21,8 @@
 
 using namespace CLHEP;
 
+//__________________________________________________________________________________________________________
+
 DetectorMessenger::DetectorMessenger(DetectorConstruction *pDetector)
 :m_pDetector(pDetector)
 { 
@@ -35,14 +37,18 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction *pDetector)
 
 }
 
+//__________________________________________________________________________________________________________
+
 DetectorMessenger::~DetectorMessenger()
 {
   delete m_pDetectorDir;
 }
 
+//__________________________________________________________________________________________________________
+
 void DetectorMessenger::SetNewValue(G4UIcommand *pUIcommand, G4String hNewValue)
 {    
-    // NaI position
-    if(pUIcommand == m_pNaIPosCmd)
-        m_pDetector->SetNaIPos((m_pNaIPosCmd->GetNewDoubleValue(hNewValue)));
+    
 }
+
+//__________________________________________________________________________________________________________

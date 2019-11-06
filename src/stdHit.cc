@@ -10,52 +10,66 @@ using namespace CLHEP;
 
 G4Allocator<stdHit> stdHitAllocator;
 
-stdHit::stdHit() {}
+//__________________________________________________________________________________________________________
+
+stdHit::stdHit() {
+	
+	}
+
+//__________________________________________________________________________________________________________
 
 stdHit::~stdHit()
 {
-	if(m_pParticleType) delete m_pParticleType;
-	if(m_pParentType) delete m_pParentType;
-	if(m_pCreatorProcess) delete m_pCreatorProcess;
+	if(m_pParticleType)      delete m_pParticleType;
+	if(m_pParentType)        delete m_pParentType;
+	if(m_pCreatorProcess)    delete m_pCreatorProcess;
 	if(m_pDepositingProcess) delete m_pDepositingProcess; 
 }
 
+//__________________________________________________________________________________________________________
+
 stdHit::stdHit(const stdHit &hHit):G4VHit()
 {
-	m_iTrackId = hHit.m_iTrackId;
-	m_iParentId = hHit.m_iParentId;
-	m_pParticleType = hHit.m_pParticleType;
-	m_pParentType = hHit.m_pParentType ;
-	m_pCreatorProcess = hHit.m_pCreatorProcess ;
-	m_pDepositingProcess = hHit.m_pDepositingProcess ;
-	m_hPosition = hHit.m_hPosition;
-	m_dEnergyDeposited = hHit.m_dEnergyDeposited;
-	m_dKineticEnergy = hHit.m_dKineticEnergy ;
-	m_dTime = hHit.m_dTime;
+	m_iTrackId           = hHit.m_iTrackId;
+	m_iParentId          = hHit.m_iParentId;
+	m_pParticleType      = hHit.m_pParticleType;
+	m_pParentType        = hHit.m_pParentType;
+	m_pCreatorProcess    = hHit.m_pCreatorProcess;
+	m_pDepositingProcess = hHit.m_pDepositingProcess;
+	m_hPosition          = hHit.m_hPosition;
+	m_dEnergyDeposited   = hHit.m_dEnergyDeposited;
+	m_dKineticEnergy     = hHit.m_dKineticEnergy;
+	m_dTime              = hHit.m_dTime;
 }
+
+//__________________________________________________________________________________________________________
 
 const stdHit &
 stdHit::operator=(const stdHit &hHit)
 {
-	m_iTrackId = hHit.m_iTrackId;
-	m_iParentId = hHit.m_iParentId;
-	m_pParticleType = hHit.m_pParticleType;
-	m_pParentType = hHit.m_pParentType ;
-	m_pCreatorProcess = hHit.m_pCreatorProcess ;
-	m_pDepositingProcess = hHit.m_pDepositingProcess ;
-	m_hPosition = hHit.m_hPosition;
-	m_dEnergyDeposited = hHit.m_dEnergyDeposited;
-	m_dKineticEnergy = hHit.m_dKineticEnergy ;
-	m_dTime = hHit.m_dTime;
+	m_iTrackId           = hHit.m_iTrackId;
+	m_iParentId          = hHit.m_iParentId;
+	m_pParticleType      = hHit.m_pParticleType;
+	m_pParentType        = hHit.m_pParentType;
+	m_pCreatorProcess    = hHit.m_pCreatorProcess;
+	m_pDepositingProcess = hHit.m_pDepositingProcess;
+	m_hPosition          = hHit.m_hPosition;
+	m_dEnergyDeposited   = hHit.m_dEnergyDeposited;
+	m_dKineticEnergy     = hHit.m_dKineticEnergy;
+	m_dTime              = hHit.m_dTime;
 	
 	return *this;
 }
+
+//__________________________________________________________________________________________________________
 
 G4int
 stdHit::operator==(const stdHit &hHit) const
 {
 	return ((this == &hHit) ? (1) : (0));
 }
+
+//__________________________________________________________________________________________________________
 
 void stdHit::Draw()
 {
@@ -74,21 +88,24 @@ void stdHit::Draw()
 	}
 }
 
+//__________________________________________________________________________________________________________
+
 void stdHit::Print()
 {
 	G4cout << "-------------------- LXe hit --------------------" 
-		<< "Id: " << m_iTrackId
-		<< " Particle: " << *m_pParticleType
-		<< " ParentId: " << m_iParentId
-		<< " ParentType: " << *m_pParentType << G4endl
-		<< "CreatorProcess: " << *m_pCreatorProcess
-		<< " DepositingProcess: " << *m_pDepositingProcess << G4endl
-		<< "Position: " << m_hPosition.x()/mm
-		<< " " << m_hPosition.y()/mm
-		<< " " << m_hPosition.z()/mm
-		<< " mm" << G4endl
-		<< "EnergyDeposited: " << m_dEnergyDeposited/keV << " keV"
-		<< " KineticEnergyLeft: " << m_dKineticEnergy/keV << " keV"
-		<< " Time: " << m_dTime/s << " s" << G4endl;
+		<< "Id: "                  <<  m_iTrackId
+		<< " Particle: "           << *m_pParticleType
+		<< " ParentId: "           <<  m_iParentId
+		<< " ParentType: "         << *m_pParentType          << G4endl
+		<< "CreatorProcess: "      << *m_pCreatorProcess
+		<< " DepositingProcess: "  << *m_pDepositingProcess   << G4endl
+		<< "Position: "            <<  m_hPosition.x()/mm
+		<< " "                     <<  m_hPosition.y()/mm
+		<< " "                     <<  m_hPosition.z()/mm
+		<< " mm"                                              << G4endl
+		<< "EnergyDeposited: "     <<  m_dEnergyDeposited/keV << " keV"
+		<< " KineticEnergyLeft: "  <<  m_dKineticEnergy/keV   << " keV"
+		<< " Time: "               <<  m_dTime/s  << " s"     << G4endl;
 }
 
+//__________________________________________________________________________________________________________

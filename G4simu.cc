@@ -22,6 +22,8 @@
 
 // SVN
 
+//__________________________________________________________________________________________________________
+
 void usage(); 
 
 /* 
@@ -31,6 +33,8 @@ void usage();
  *
  * A.P. Colijn -- jun 2015 --
  */
+
+//__________________________________________________________________________________________________________
 
 int
 main(int argc, char **argv)
@@ -92,7 +96,7 @@ main(int argc, char **argv)
   pRunManager->SetUserInitialization(detCon);
   
   // Physics List
-  G4String physicsRoot = hDataFilename+".PHYS";
+  G4String physicsRoot  = hDataFilename+".PHYS";
   PhysicsList *physList = new PhysicsList(physicsRoot); 
   pRunManager->SetUserInitialization(physList);
 	
@@ -170,9 +174,12 @@ main(int argc, char **argv)
   return 0;
 }
 
+//__________________________________________________________________________________________________________
+
 void
 usage()
 {
   exit(0);
 }
 
+//__________________________________________________________________________________________________________

@@ -14,6 +14,8 @@
 #include <G4ios.hh>
 #include <globals.hh>
 
+#include <G4OpticalPhysics.hh>
+
 #include <iomanip>
 #include <G4EmStandardPhysics.hh>
 #include <G4EmLivermorePhysics.hh>
@@ -51,23 +53,23 @@ PhysicsList::PhysicsList(G4String fName):G4VUserPhysicsList()
 {
     
     defaultCutValue = 1.0 * mm;	//
-    cutForGamma    = defaultCutValue;
-    cutForElectron = defaultCutValue;
-    cutForPositron = defaultCutValue;
+    cutForGamma     = defaultCutValue;
+    cutForElectron  = defaultCutValue;
+    cutForPositron  = defaultCutValue;
     
     VerboseLevel = 0;
     OpVerbLevel  = 0;
     
     SetVerboseLevel(VerboseLevel);
     
-    m_pMessenger = new PhysicsMessenger(this);
+    m_pMessenger  = new PhysicsMessenger(this);
     
     // standard physics
-    particleList = new G4DecayPhysics("decays");
-    //default physics
+    particleList  = new G4DecayPhysics("decays");
+    // default physics
     fRaddecayList = new G4RadioactiveDecayPhysics();
     
-    physRootFile = fName;
+    physRootFile  = fName;
 }
 
 //__________________________________________________________________________________________________________
@@ -82,7 +84,7 @@ PhysicsList::~PhysicsList()
     //	delete opPhysicsList;
     delete m_pMessenger;
     
-    for(size_t i=0; i<hadronPhys.size(); i++) {
+    for(size_t i = 0; i < hadronPhys.size(); i++) {
         delete hadronPhys[i];
     }
 }
@@ -97,18 +99,18 @@ PhysicsList::ConstructParticle()
 
 //__________________________________________________________________________________________________________
 
-#include <G4OpticalPhysics.hh>
-
 void
 PhysicsList::ConstructProcess()
 {
-    G4cout <<"PhysicsList::PhysicsList() EM physics: "<< m_hEMlowEnergyModel << G4endl;
-    G4cout <<"PhysicsList::PhysicsList() Cerenkov: "<< m_bCerenkov << G4endl;
+    G4cout << "PhysicsList::PhysicsList() EM physics: " << m_hEMlowEnergyModel << G4endl;
+    G4cout << "PhysicsList::PhysicsList() Cerenkov: "   << m_bCerenkov         << G4endl;
     
     // first add this one ...
     AddTransportation();
     
-    // EM physics
+    //
+    // EM physics models
+    //
     if        (m_hEMlowEnergyModel == "emstandard") {
         emPhysicsList = new G4EmStandardPhysics();
     } else if (m_hEMlowEnergyModel == "emlivermore"){
@@ -116,7 +118,7 @@ PhysicsList::ConstructProcess()
     } else if (m_hEMlowEnergyModel == "empenelope"){
         emPhysicsList = new G4EmPenelopePhysics();
     } else {
-        G4cout <<"PhysicsList::PhysicsList() FATAL: Bad EM physics list chosen: "<<m_hEMlowEnergyModel<<G4endl;
+        G4cout << "PhysicsList::PhysicsList() FATAL: Bad EM physics list chosen: " << m_hEMlowEnergyModel << G4endl;
         G4String msg = " Available choices are: <emstandard> <emlivermore (default)> <empenelope>";
         G4Exception("PhysicsList::ConstructProcess()","PhysicsList",FatalException,msg);
     }
@@ -129,10 +131,10 @@ PhysicsList::ConstructProcess()
     fRaddecayList->ConstructProcess();
     
     //
-    // construct the Hadronic physics models
+    // Hadronic physics models
     //
     hadronPhys.clear();
-    if (m_hHadronicModel == "G4QGSP_BERT") {
+    if        (m_hHadronicModel == "G4QGSP_BERT") {
         // implemented QGSP_BERT: is it done in the right way?
         // this follows the recipe from examples/extended/hadronic/Hadr01
         SetBuilderList1(kFALSE);
@@ -148,17 +150,17 @@ PhysicsList::ConstructProcess()
     }
     
     // construct processes
-    for(size_t i=0; i<hadronPhys.size(); i++) {
+    for(size_t i = 0; i < hadronPhys.size(); i++) {
         hadronPhys[i]->ConstructProcess();
     }
 
     // test the ions
-//   G4IonTable* ionTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
-//   G4double Ex = 661.659*keV;
-//   G4ParticleDefinition* ion   = ionTable->GetIon(56, 137 , Ex);
-//   ion->SetPDGStable(false);
-//  
-//   ion->SetPDGLifeTime(500*second);
+    // G4IonTable* ionTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
+    // G4double Ex = 661.659*keV;
+    // G4ParticleDefinition* ion   = ionTable->GetIon(56, 137 , Ex);
+    // ion->SetPDGStable(false);
+    //  
+    // ion->SetPDGLifeTime(500*second);
 }
 
 //__________________________________________________________________________________________________________
@@ -184,14 +186,11 @@ PhysicsList::AddTransportation()
     G4VUserPhysicsList::AddTransportation();
 }
 
-// Cuts /////////////////////////////////////////////////////////////////////
+// Cuts_____________________________________________________________________________________________________
+
 void
 PhysicsList::SetCuts()
 {
-    
-    if(verboseLevel > 1)
-        G4cout << "PhysicsList::SetCuts:";
-    
     if(verboseLevel > 0)
     {
         G4cout << "PhysicsList::SetCuts:";
@@ -202,8 +201,7 @@ PhysicsList::SetCuts()
     //special for low energy physics
     G4double lowlimit = 250 * eV;
     
-    G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(lowlimit,
-                                                                    100. * GeV);
+    G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(lowlimit, 100. * GeV);
     
     // set cut values for gamma at first and for e- second and next for e+,
     // because some processes for e+/e- need cut values for gamma
@@ -220,12 +218,12 @@ PhysicsList::SetCuts()
 void
 PhysicsList::MakePhysicsPlots()
 {
-    G4cout <<"PhysicsList:: Init directory structure for histogramming..."<<G4endl;
+    G4cout << "PhysicsList:: Init directory structure for histogramming..." << G4endl;
     TFile *_f_physics = new TFile(physRootFile,"RECREATE");
     
-    TDirectory *_physics = _f_physics->mkdir("physics");
-    TDirectory *_em_physics=_physics->mkdir("electromagnetic");
-    TDirectory *_had_physics=_physics->mkdir("hadronic");
+    TDirectory *_physics     = _f_physics->mkdir("physics");
+    TDirectory *_em_physics  =   _physics->mkdir("electromagnetic");
+    TDirectory *_had_physics =   _physics->mkdir("hadronic");
     
     _physics->cd();
     
@@ -242,7 +240,7 @@ PhysicsList::MakePhysicsPlots()
     
     // make a list of materials for graphs
     G4int nmaterial = G4Material::GetNumberOfMaterials();
-    G4cout <<"MakePhysicsPlots:: Number of materials = "<<nmaterial<<G4endl;
+    G4cout << "MakePhysicsPlots:: Number of materials = " << nmaterial << G4endl;
     //
     // EM physics plots
     //
@@ -250,8 +248,8 @@ PhysicsList::MakePhysicsPlots()
     //
     // plotting range on a xlog-scale
     //
-    G4double emin=0.001;  //
-    G4double emax=20.00; // 20 MeV
+    G4double emin = 0.001;  //  1 keV
+    G4double emax = 20.00;  // 20 MeV
     emin = std::log10(emin);
     emax = std::log10(emax);
     
@@ -278,23 +276,24 @@ PhysicsList::MakePhysicsPlots()
         std::vector<TH1F*> _eBrem;
         
         //  for(G4int imat=0; imat<(G4int)matNames.size(); imat++){
+        G4cout << "MakePhysicsPlots:: EMModel = "<<m_hEMlowEnergyModel<<G4endl;
         for(G4int imat=0; imat<nmaterial; imat++){
             // get material
             G4Material *mat = G4NistManager::Instance()->GetMaterial(imat);
             G4double    rho = mat->GetDensity()/(g/cm3);
-            G4cout << "MakePhysicsPlots:: Generate EM plots for:"<< mat->GetName()<<G4endl;
+            G4cout << "MakePhysicsPlots:: Generate EM plots for:" << mat->GetName() << G4endl;
             
             // book histograms
             char  hName[100], pName[100];
             sprintf(hName,"%s_compt",mat->GetName().c_str());
             _compt.push_back(new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
-            sprintf(hName,"%s_phot",mat->GetName().c_str());
-            _phot.push_back(new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
-            sprintf(hName,"%s_conv",mat->GetName().c_str());
-            _conv.push_back(new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
+            sprintf(hName,"%s_phot", mat->GetName().c_str());
+            _phot.push_back( new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
+            sprintf(hName,"%s_conv", mat->GetName().c_str());
+            _conv.push_back( new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
             
-            sprintf(hName,"%s_msc",mat->GetName().c_str());
-            _msc.push_back(new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
+            sprintf(hName,"%s_msc",  mat->GetName().c_str());
+            _msc.push_back(  new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
             sprintf(hName,"%s_eIoni",mat->GetName().c_str());
             _eIoni.push_back(new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
             sprintf(hName,"%s_eBrem",mat->GetName().c_str());
@@ -308,16 +307,16 @@ PhysicsList::MakePhysicsPlots()
             TParameter<double> *Parameter = new TParameter<double>(pName,X0/cm);
             Parameter->Write();
             
-            G4cout <<mat->GetName()<< " X0 = "<<X0/cm << " (cm)" << G4endl;
-            for(G4int i=0; i<nstep; i++){
-                G4double x=emin+i*de;
-                G4double e=std::pow(10,x);
+            G4cout << mat->GetName() << " X0 = " << X0/cm << " (cm)" << G4endl;
+            for(G4int i = 0; i < nstep; i++){
+                G4double x = emin + i*de;
+                G4double e = std::pow(10,x);
                 // cross section in cm2/g!
                 G4double sig_compt = emCalc.ComputeCrossSectionPerVolume(e,"gamma","compt",mat->GetName(),0)*cm / rho;
-                G4double sig_phot  = emCalc.ComputeCrossSectionPerVolume(e,"gamma","phot",mat->GetName(),0)*cm / rho;
-                G4double sig_conv  = emCalc.ComputeCrossSectionPerVolume(e,"gamma","conv",mat->GetName(),0)*cm / rho;
+                G4double sig_phot  = emCalc.ComputeCrossSectionPerVolume(e,"gamma","phot", mat->GetName(),0)*cm / rho;
+                G4double sig_conv  = emCalc.ComputeCrossSectionPerVolume(e,"gamma","conv", mat->GetName(),0)*cm / rho;
                 
-                G4double dedx_msc   = X0*emCalc.ComputeDEDX(e,"e-","msc",mat->GetName())/e;
+                G4double dedx_msc   = X0*emCalc.ComputeDEDX(e,"e-","msc",  mat->GetName())/e;
                 G4double dedx_eIoni = X0*emCalc.ComputeDEDX(e,"e-","eIoni",mat->GetName())/e;
                 G4double dedx_eBrem = X0*emCalc.ComputeDEDX(e,"e-","eBrem",mat->GetName())/e;
                 
@@ -341,8 +340,8 @@ PhysicsList::MakePhysicsPlots()
         // plotting range on a xlog-scale
         //
         G4cout << "Hadronic physics plots"<<G4endl;
-        emin=0.00000001;  //
-        emax=20.00; // 20 MeV
+        emin = 0.00000001;  // 0.01 eV
+        emax = 20.00;       // 20  MeV
         emin = std::log10(emin);
         emax = std::log10(emax);
         
@@ -360,10 +359,10 @@ PhysicsList::MakePhysicsPlots()
         G4HadronicProcessStore* hadstore     = G4HadronicProcessStore::Instance();
         const G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("neutron");
         
-        for(G4int imat=0; imat<nmaterial; imat++){
+        for(G4int imat = 0; imat < nmaterial; imat++){
             // get material
             G4Material *mat = G4NistManager::Instance()->GetMaterial(imat);
-            G4cout << "MakePhysicsPlots:: Generate neutron cross section plots for:"<< mat->GetName()<<G4endl;
+            G4cout << "MakePhysicsPlots:: Generate neutron cross section plots for:" << mat->GetName() << G4endl;
             
             // book histograms
             char  hName[100];
@@ -376,9 +375,9 @@ PhysicsList::MakePhysicsPlots()
             sprintf(hName,"%s_neutron_fission",mat->GetName().c_str());
             _neutron_fission.push_back(new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
             
-            for(G4int i=0; i<nstep; i++){
-                G4double x=emin+i*de;
-                G4double e=std::pow(10.,x);
+            for(G4int i = 0; i < nstep; i++){
+                G4double x = emin + i*de;
+                G4double e = std::pow(10.,x);
                 G4double xs_elastic   = hadstore->GetElasticCrossSectionPerVolume(particle,e,mat)*cm;
                 G4double xs_inelastic = hadstore->GetInelasticCrossSectionPerVolume(particle,e,mat)*cm;
                 G4double xs_capture   = hadstore->GetCaptureCrossSectionPerVolume(particle,e,mat)*cm;
@@ -388,6 +387,8 @@ PhysicsList::MakePhysicsPlots()
                 _neutron_capture[imat]->Fill(x,xs_capture);
                 _neutron_fission[imat]->Fill(x,xs_fission);
             }
+            _neutron_fission[imat]->GetXaxis()->SetTitle("10log(Neutron Energy [MeV])");
+            _neutron_fission[imat]->GetYaxis()->SetTitle("Cross section per volume [cm-1]");
         }
         
         //
@@ -401,11 +402,11 @@ PhysicsList::MakePhysicsPlots()
         
         
         G4int nelement = G4Element::GetNumberOfElements();
-        G4cout <<" number of elements "<< nelement<<G4endl;
+        G4cout << " number of elements " << nelement << G4endl;
         
-        for(G4int iel = 0; iel<nelement; iel++){
+        for(G4int iel = 0; iel < nelement; iel++){
             G4Element *ele = G4NistManager::Instance()->GetElement(iel);
-            G4cout <<"MakePhysicsPlots:: element = "<<ele->GetName()<<G4endl;
+            G4cout << "MakePhysicsPlots:: element = " << ele->GetName() << G4endl;
             
             // book histograms
             char  hName[100];
@@ -419,9 +420,9 @@ PhysicsList::MakePhysicsPlots()
             _el_neutron_fission.push_back(new TH1F(hName,hName,nstep,emin-de/2,emax-de/2));
             
             G4Material *mdummy = G4NistManager::Instance()->GetMaterial(1);
-            for(G4int i=0; i<nstep; i++){
-                G4double x=emin+i*de;
-                G4double e=std::pow(10.,x);
+            for(G4int i = 0; i < nstep; i++){
+                G4double x = emin + i*de;
+                G4double e = std::pow(10.,x);
                 
                 // G4.9.5
                 G4double xs_elastic   = hadstore->GetElasticCrossSectionPerAtom(particle,e,ele,mdummy)/barn;
@@ -439,6 +440,8 @@ PhysicsList::MakePhysicsPlots()
                 _el_neutron_capture[iel]->Fill(x,xs_capture);
                 _el_neutron_fission[iel]->Fill(x,xs_fission);
             }
+            _el_neutron_fission[iel]->GetXaxis()->SetTitle("10log(Neutron Energy [MeV])");
+            _el_neutron_fission[iel]->GetYaxis()->SetTitle("Cross section [barn]");
         }
         
     } // makePhysicsHistograms

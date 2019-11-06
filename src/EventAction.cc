@@ -2,14 +2,20 @@
 
 #include "EventAction.hh"
 
+//__________________________________________________________________________________________________________
+
 EventAction::EventAction(AnalysisManager *pAnalysisManager)
 {
   m_pAnalysisManager = pAnalysisManager;
 }
 
+//__________________________________________________________________________________________________________
+
 EventAction::~EventAction()
 {
 }
+
+//__________________________________________________________________________________________________________
 
 void
 EventAction::BeginOfEventAction(const G4Event *pEvent)
@@ -23,10 +29,12 @@ EventAction::BeginOfEventAction(const G4Event *pEvent)
     m_pAnalysisManager->BeginOfEvent(pEvent);
 }
 
+//__________________________________________________________________________________________________________
+
 void EventAction::EndOfEventAction(const G4Event *pEvent)
 {
   if(m_pAnalysisManager)
     m_pAnalysisManager->EndOfEvent(pEvent);
 }
 
-
+//__________________________________________________________________________________________________________

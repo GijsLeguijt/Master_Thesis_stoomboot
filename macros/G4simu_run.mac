@@ -5,12 +5,21 @@
 
 /run/random/setRandomSeed 12346
 
+#either use this block (all over TPC, or next one, 1 static point)
+/gps/position 0. 0. 0. cm
 /gps/pos/type    Volume
 /gps/pos/shape   Sphere
-/gps/pos/centre  0. 0. 0. cm
-/gps/pos/radius  1 cm
-/gps/pos/confine SourceCore
-/gps/ang/type   iso
+/gps/pos/radius  120. cm
+/gps/pos/confine TPC
+/gps/ang/type    iso
+
+#Sending all particles initially towards the LXe
+#/gps/position 0. 65. 0. cm
+#/gps/ang/type    iso
+#/gps/ang/minphi 0. deg 
+#/gps/ang/maxphi 180. deg 
+
+
 
 /grdm/BRbias 0
 /grdm/fBeta 0
@@ -18,10 +27,10 @@
 /grdm/analogueMC 1
 
 
-#
-#/gps/position 0 0 0
-/gps/particle ion
-/gps/energy 0. eV
+
+#/gps/particle gamma
+/gps/particle geantino
+/gps/energy 1. MeV
 # 60Co
 #/gps/ion 27 60
 # 44Ti
@@ -29,4 +38,4 @@
 # 137Cs
 #/gps/ion 55 137
 # 54Mn
-/gps/ion 25 54
+#/gps/ion 25 54

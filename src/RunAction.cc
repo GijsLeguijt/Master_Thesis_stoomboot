@@ -6,6 +6,8 @@
 
 #include "RunAction.hh"
 
+//__________________________________________________________________________________________________________
+
 RunAction::RunAction(AnalysisManager *pAnalysisManager)
 {
   m_hRanSeed         = 12345; // default value
@@ -15,10 +17,14 @@ RunAction::RunAction(AnalysisManager *pAnalysisManager)
   
 }
 
+//__________________________________________________________________________________________________________
+
 RunAction::~RunAction()
 {
   delete m_pMessenger;
 }
+
+//__________________________________________________________________________________________________________
 
 void
 RunAction::BeginOfRunAction(const G4Run *pRun)
@@ -31,17 +37,19 @@ RunAction::BeginOfRunAction(const G4Run *pRun)
   // random seeding of the MC
   if(m_hRanSeed > 0){
     CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
-    G4cout << "RunAction::BeginOfRunAction Initialize random numbers with seed = "<<m_hRanSeed<<G4endl;
+    G4cout << "RunAction::BeginOfRunAction Initialize random numbers with seed = " << m_hRanSeed << G4endl;
     CLHEP::HepRandom::setTheSeed(m_hRanSeed);
   } else {
     // initialize with time.....
     struct timeval hTimeValue;
     gettimeofday(&hTimeValue, NULL);
-    G4cout << "RunAction::BeginOfRunAction WARNING RANDOM NUMBERS INITIALIZED BY TIME !"<<G4endl;
-    G4cout << "RunAction::BeginOfRunAction Initialize random numbers with seed = "<<hTimeValue.tv_usec<<G4endl;
+    G4cout << "RunAction::BeginOfRunAction WARNING RANDOM NUMBERS INITIALIZED BY TIME !" << G4endl;
+    G4cout << "RunAction::BeginOfRunAction Initialize random numbers with seed = " << hTimeValue.tv_usec << G4endl;
     CLHEP::HepRandom::setTheSeed(hTimeValue.tv_usec);
   }
 }
+
+//__________________________________________________________________________________________________________
 
 void
 RunAction::EndOfRunAction(const G4Run *pRun)
@@ -50,3 +58,4 @@ RunAction::EndOfRunAction(const G4Run *pRun)
     m_pAnalysisManager->EndOfRun(pRun);
 }
 
+//__________________________________________________________________________________________________________

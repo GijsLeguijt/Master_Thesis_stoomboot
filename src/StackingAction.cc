@@ -10,14 +10,20 @@
 
 #include "StackingAction.hh"
 
+//__________________________________________________________________________________________________________
+
 StackingAction::StackingAction(AnalysisManager *pAnalysisManager)
 {
 	m_pAnalysisManager = pAnalysisManager;
 }
 
+//__________________________________________________________________________________________________________
+
 StackingAction::~StackingAction()
 {
 }
+
+//__________________________________________________________________________________________________________
 
 G4ClassificationOfNewTrack
 StackingAction::ClassifyNewTrack(const G4Track *pTrack)
@@ -40,30 +46,28 @@ StackingAction::ClassifyNewTrack(const G4Track *pTrack)
     if(pTrack->GetDefinition()->GetParticleType() == "nucleus" && !pTrack->GetDefinition()->GetPDGStable())
 	{
         if(pTrack->GetParentID() > 0 && pTrack->GetCreatorProcess()->GetProcessName() == "RadioactiveDecay"){
-//            G4cout << "NAME     = " << pTrack->GetParticleDefinition()->GetParticleName()<<G4endl;
-//            G4cout << "LIFETIME = " << pTrack->GetParticleDefinition()->GetPDGLifeTime()/CLHEP::second<<G4endl;
-// be carefull with teh postpone! it can make a new event of a daughter nucleus with just a bit of kinetic energy....    
-//			hTrackClassification = fPostpone;
+    //      G4cout << "NAME     = " << pTrack->GetParticleDefinition()->GetParticleName()<<G4endl;
+    //      G4cout << "LIFETIME = " << pTrack->GetParticleDefinition()->GetPDGLifeTime()/CLHEP::second<<G4endl;
+    // be carefull with teh postpone! it can make a new event of a daughter nucleus with just a bit of kinetic energy....    
+    //		hTrackClassification = fPostpone;
         }
     }
 
 	return hTrackClassification;
 }
 
+//__________________________________________________________________________________________________________
+
 void
 StackingAction::NewStage()
 {
 }
+
+//__________________________________________________________________________________________________________
 
 void
 StackingAction::PrepareNewEvent()
 { 
 }
 
-
-
-
-
-
-
-
+//__________________________________________________________________________________________________________

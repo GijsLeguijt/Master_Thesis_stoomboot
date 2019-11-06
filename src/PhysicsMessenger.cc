@@ -24,6 +24,8 @@
 #include "PhysicsMessenger.hh"
 #include "PhysicsList.hh"
 
+//__________________________________________________________________________________________________________
+
 PhysicsMessenger::PhysicsMessenger(PhysicsList *pPhysicsList):
   m_pPhysicsList(pPhysicsList)
 {
@@ -64,10 +66,14 @@ PhysicsMessenger::PhysicsMessenger(PhysicsList *pPhysicsList):
 	
 }
 
+//__________________________________________________________________________________________________________
+
 PhysicsMessenger::~PhysicsMessenger()
 {
   delete m_pDirectory;
 }
+
+//__________________________________________________________________________________________________________
 
 void
 PhysicsMessenger::SetNewValue(G4UIcommand * command, G4String newValues)
@@ -85,3 +91,4 @@ PhysicsMessenger::SetNewValue(G4UIcommand * command, G4String newValues)
     m_pPhysicsList->SetHistograms(m_pHistosCmd->GetNewBoolValue(newValues));
 }
 
+//__________________________________________________________________________________________________________

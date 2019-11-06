@@ -5,7 +5,7 @@
 
 #include "PrimaryGeneratorAction.hh"
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+//__________________________________________________________________________________________________________
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(G4String fName)
 : G4VUserPrimaryGeneratorAction(),
@@ -15,9 +15,9 @@ fParticleGun(0)
     
     // APC added
     m_hParticleTypeOfPrimary = "";
-    m_dEnergyOfPrimary = 0.;
-    m_hPositionOfPrimary = G4ThreeVector(0., 0., 0.);
-    m_hDirectionOfPrimary = G4ThreeVector(0., 0., 0.);
+    m_dEnergyOfPrimary       = 0.; // 1. * CLHEP::MeV;
+    m_hPositionOfPrimary     = G4ThreeVector(0., 0., 0.);
+    m_hDirectionOfPrimary    = G4ThreeVector(0., 0., 0.);
     
     generatorRootFile = fName;
     // histograms.....
@@ -34,6 +34,8 @@ fParticleGun(0)
     _energy_accept = new TH1F("_energy_accept","_energy_accept",1000,0,5);
 }
 
+//__________________________________________________________________________________________________________
+
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
     _f_prim->cd();
@@ -46,6 +48,8 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
     
     delete fParticleGun;
 }
+
+//__________________________________________________________________________________________________________
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
@@ -86,7 +90,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         G4double dPY = pTrack->GetMomentum().y();
         G4double dPZ = pTrack->GetMomentum().z();
         
-        G4PrimaryVertex *pVertex = new G4PrimaryVertex(pTrack->GetPosition(), 0.);
+        G4PrimaryVertex *pVertex    = new G4PrimaryVertex(pTrack->GetPosition(), 0.);
         
         G4PrimaryParticle *pPrimary = new G4PrimaryParticle(pTrack->GetDefinition(), dPX, dPY, dPZ);
         pPrimary->SetMass(pTrack->GetDefinition()->GetPDGMass());
@@ -106,10 +110,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
         delete pTrack;
     }
-
     
     // fill histograms
     _energy_accept->Fill(m_dEnergyOfPrimary);
     _cost_accept->Fill(m_hDirectionOfPrimary.z());
 }
 
+//__________________________________________________________________________________________________________

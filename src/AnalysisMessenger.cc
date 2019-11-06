@@ -20,6 +20,8 @@
 
 using namespace CLHEP;
 
+//__________________________________________________________________________________________________________
+
 AnalysisMessenger::AnalysisMessenger(AnalysisManager *pAnalysis)
 :m_pAnalysis(pAnalysis)
 { 
@@ -33,13 +35,19 @@ AnalysisMessenger::AnalysisMessenger(AnalysisManager *pAnalysis)
 
 }
 
+//__________________________________________________________________________________________________________
+
 AnalysisMessenger::~AnalysisMessenger()
 {
   delete m_pAnalysisDir;
 }
+
+//__________________________________________________________________________________________________________
 
 void AnalysisMessenger::SetNewValue(G4UIcommand *pUIcommand, G4String hNewValue)
 {
         // source position
 	if(pUIcommand == m_pTreeTypeCmd) m_pAnalysis->SetTreeType(hNewValue);
 }
+
+//__________________________________________________________________________________________________________

@@ -43,7 +43,6 @@ private:
     
 private:
     G4int m_LXeCollectionID;
-    G4int m_NaICollectionID;
     std::vector<G4int> m_CollectionIDs;
     
     G4String m_hDataFilename;
@@ -54,7 +53,7 @@ private:
     TDirectory *_events;
     
     TParameter<int> *m_pNbEventsToSimulateParameter;
-    //  TParameter<double> *nRejectParameter;
+    // TParameter<double> *nRejectParameter;
     // TParameter<double> *nAcceptParameter;
     
     PrimaryGeneratorAction *m_pPrimaryGeneratorAction;
